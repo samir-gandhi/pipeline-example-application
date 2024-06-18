@@ -1,6 +1,6 @@
-# Ping Platform Example Pipeline
+# Ping Application Example Pipeline
 
-The intention of this repository is to present a simplified reference demonstrating how a CICD pipeline might work for Ping Identity solutions. The configuration managed in this repository covers "platform" components that are complementary to the [infrastructure](https://github.com/pingidentity/pipeline-example-infrastructure) and [application](https://github.com/pingidentity/pipeline-example-application) example pipeline repositories.
+This repository is intended to present a simplified reference demonstrating how a CICD pipeline might work for Ping Identity applications running in PingOne. It is a complement to the [infrastructure](https://github.com/pingidentity/pipeline-example-infrastructure) and [platform](https://github.com/pingidentity/pipeline-example-platform) example pipeline repositories.
 
 **Infrastructure** - Components dealing with deploying software onto self-managed Kubernetes infrastructure and any configuration that must be delivered directly via the filesystem.
 
@@ -10,7 +10,9 @@ The intention of this repository is to present a simplified reference demonstrat
 
 The use cases and features shown in this repository are an implementation of the guidance provided from Ping Identity's [Terraform Best Practices](https://terraform.pingidentity.com/best-practices/) and [Getting Started with Configuration Promotion at Ping](https://terraform.pingidentity.com/getting-started/configuration-promotion/) documents.
 
-In this repository, the processes and features shown in a GitOps process of developing and delivering a new feature include:
+#### START HERE WITH FURTHER EDITS ####
+
+In this repository, the processes and features shown in a GitOps process of developing and delivering a new application include:
 
 - Feature Request Template
 - On-demand development environment deployment
