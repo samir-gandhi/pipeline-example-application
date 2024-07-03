@@ -35,13 +35,16 @@ jobs:
         case "${_branch}" in
           "prod")
             _tfdir=terraform/prod
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
             ;;
           "qa")
             _tfdir=terraform/qa
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
             ;;
           *)
-            echo "ERROR: Unknown target branch: ${_branch}"
-            exit 1
+            _tfdir=terraform/dev
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_DEV}"
+            ;;
         esac
         cd ${_tfdir}
         echo "***Running terraform lint***"
@@ -65,13 +68,16 @@ jobs:
         case "${_branch}" in
           "prod")
             _tfdir=terraform/prod
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
             ;;
           "qa")
             _tfdir=terraform/qa
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
             ;;
           *)
-            echo "ERROR: Unknown target branch: ${_branch}"
-            exit 1
+            _tfdir=terraform/dev
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_DEV}"
+            ;;
         esac
         terraform -chdir=${_tfdir} init
         echo "***Running terraform validate***"
@@ -108,13 +114,16 @@ jobs:
         case "${_branch}" in
           "prod")
             _tfdir=terraform/prod
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
             ;;
           "qa")
             _tfdir=terraform/qa
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
             ;;
           *)
-            echo "ERROR: Unknown target branch: ${_branch}"
-            exit 1
+            _tfdir=terraform/dev
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_DEV}"
+            ;;
         esac
         terraform -chdir=${_tfdir} init
         echo "***Running terraform plan***"

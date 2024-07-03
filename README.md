@@ -1,6 +1,8 @@
-# Ping Platform Example Pipeline
+# Ping Application Example Pipeline
 
-The intention of this repository is to present a simplified reference demonstrating how a CICD pipeline might work for Ping Identity solutions. The configuration managed in this repository covers "platform" components that are complementary to the [infrastructure](https://github.com/pingidentity/pipeline-example-infrastructure) and [application](https://github.com/pingidentity/pipeline-example-application) example pipeline repositories.
+This repository is intended to present a simplified reference demonstrating how a management and deployment pipeline might work for applications that depend on services managed by a central IAM platform team. As such, it is a complement to the [infrastructure](https://github.com/pingidentity/pipeline-example-infrastructure) and [platform](https://github.com/pingidentity/pipeline-example-platform) example pipeline repositories.
+
+> NOTE: This repository directly depends on a completed set-up of the [pipeline-example-application](https://github.com/pingidentity/pipeline-example-platform?tab=readme-ov-file#deploy-prod-and-qa). Please ensure you have completed the steps for confguration leading up to and including the previous link.
 
 **Infrastructure** - Components dealing with deploying software onto self-managed Kubernetes infrastructure and any configuration that must be delivered directly via the filesystem.
 
@@ -10,85 +12,25 @@ The intention of this repository is to present a simplified reference demonstrat
 
 The use cases and features shown in this repository are an implementation of the guidance provided from Ping Identity's [Terraform Best Practices](https://terraform.pingidentity.com/best-practices/) and [Getting Started with Configuration Promotion at Ping](https://terraform.pingidentity.com/getting-started/configuration-promotion/) documents.
 
-In this repository, the processes and features shown in a GitOps process of developing and delivering a new feature include:
+In this repository, the processes and features shown in a GitOps process of developing and delivering a new application include:
 
 - Feature Request Template
-- On-demand development environment deployment
-- Building a feature in development environment (PingOne UI)
+- Feature Development in an on-demand or persistent development environment
 - Extracting feature configuration to be stored as code
 - Validating the extracted configuration from the developer perspective
 - Validating that the suggested configuration adheres to contribution guidelines
 - Review process of suggested change
 - Approval of change and automatic deployment into higher environments
 
-## Final Component Configuration before initial Deployment
-
-After completing the next few sections, you will have the following items configured *before* you deploy the **prod** environment into your PingOne account for the first time:
-
-### Worker Application
-
-A worker application in the "Administrators" environment of PingOne (you can use another environment if you choose).  This worker application will have the following roles:
-
-- `Environment Admin` for your organization
-- `Organization Admin` for your organization
-- `Identity Data Admin` for the environments necessary, which are the environment in which the application is located (*Administrators* in this example), and the Davinci Administrator environment where the Davinci Admin User is located.  As new environments are created by the pipeline, this application will be granted this role in those environments as well.
-
-Information needed from this application (Applications > Applications > <application_name> > Overview):
-
-- `Client ID` - This value will be assigned to **TF_VAR_pingone_client_id** in the localsecrets file (line 2)
-- `Client Secret` - This value will be assigned to **TF_VAR_pingone_client_secret** in the localsecrets file (line 3)
-- `Environment ID` - This value  will be assigned to **TF_VAR_pingone_environment_id** in the localsecrets file (line 4)
-
-Information needed from the environment in which the application resides (Environment > Settings > Environment Properties):
-
-- `Region` - This value will be assigned to **TF_VAR_pingone_region** in the localsecrets file (line 5)
-- `License ID` - This value will be assigned to **TF_VAR_pingone_license_id** in the localsecrets file (line 6)
-
-### Davinci Administrator Environment, User and Group
-
-An environment with the following characteristics:
-
-- **PingOne SSO** and **PingOne DaVinci** services enabled
-- A group for Davinci Administrators with the 'DaVinci Admin' role for the DaVinci Administrator environment
-- A user in the Davinci Administrator environment that is a member of the Davinci Administrators group
-
-Information needed from the user in the Davinci Administrator environment (Directory > Users > <user_name>):
-
-- `Username` - This value will be assigned to **TF_VAR_pingone_username** in the localsecrets file (line 8)
-- `Password` - This value will be assigned to **TF_VAR_pingone_password** in the localsecrets file (line 9).  This password is created when you create and confirm the user.
-
-Information needed from the environment in which the application resides (Environment > Settings > Environment Properties):
-
-- `Environment ID` - This value will be assigned to **TF_VAR_davinci_environment_id** in the localsecrets file (line 10)
-
-Information needed from the group in the Davinci Administrator environment (Directory > Groups > <group_name>):
-
-- `Group ID` - This value will be assigned to **TF_VAR_pingone_davinci_terraform_group_id** in the localsecrets file (line 12)
-
-### AWS S3 Bucket
-
-An AWS S3 bucket for storing Terraform state, and a user with permissions as specified in the Terraform documentation for an S3 backend.
-> Note -The bucket should have folders for **prod**, **qa** and **dev** before your first pipeline attempt.
-
-Information needed from the AWS S3 bucket and user:
-
-- `AWS Access Key ID` - This value for the user will be assigned to **AWS_ACCESS_KEY_ID** in the localsecrets file (line 14)
-- `AWS Secret Access Key` - This value for the user will be assigned to **AWS_SECRET_ACCESS_KEY** in the localsecrets file (line 15)
-- `Bucket Name` - This value will be assigned to **TF_VAR_tf_state_bucket** in the localsecrets file (line 17)
-- `Bucket region` - This value will be assigned to **TF_VAR_tf_state_region** in the localsecrets file (line 19)
-
 ## Prerequisites
 
 To be successful in recreating the use cases supported by this pipeline, there are initial steps that should be completed prior to configuring this repository:
 
-- A [PingOne trial](https://docs.pingidentity.com/r/en-us/pingone/p1_start_a_pingone_trial) or paid account configured according to the [PingOne Terraform access](https://terraform.pingidentity.com/getting-started/pingone/) and [DaVinci Terraform](https://terraform.pingidentity.com/getting-started/davinci/) access guidelines.
+- Completion of all pre-requisites and confiuration steps leading to [Feature Development](https://github.com/pingidentity/pipeline-example-platform?tab=readme-ov-file#feature-development) in the example-pipeline-platform.
 
-> Note - For PingOne, meeting these requirements means you should have credentials for a worker app residing in the "Administrators" environment that has organization-level scoped roles. For DaVinci, you should have credentials for a user in a non-"Administrators" environment that is part of a group specifically intended to be used by command-line tools or APIs with environment-level scoped roles. This demonstration will add roles to the DaVinci command-line group and will fail if roles are not scoped properly.
 
-- An [AWS trial](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all) or paid account
-- Terraform CLI v1.6+
-- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [gh](https://cli.github.com/) the Github CLI utility
+<!-- TODO - Review Required Permissions-->
+> Note - For PingOne, meeting these requirements means you should have credentials for a worker app residing in the "Administrators" environment that has organization-level scoped roles. For DaVinci, you should have credentials for a user in a non-"Administrators" environment that is part of a group specifically intended to be used by command-line tools or APIs with environment-level scoped roles.
 
 ### Repository Setup
 
@@ -98,7 +40,7 @@ Click the **Use this template** button at the top right of this page to create y
 
 ## Development Lifecycle Diagram
 
-The use cases in this repository follow the flow in this diagram:
+The use cases in this repository follow a flow similar to this diagram:
 
 ![SDLC flow](./img/generic-pipeline.png "Development Flow")
 
@@ -106,40 +48,7 @@ The use cases in this repository follow the flow in this diagram:
 
 There are a few items to configure before you can use this repository effectively.
 
-### AWS S3 Bucket for Terraform State Storage
-
-In order to avoid committing private information stored in terraform state to a code repository such as Github, and to have an efficient developer experience, it is a best practice to use a [remote backend for Terraform state](https://developer.hashicorp.com/terraform/language/settings/backends/remote). As such, this example uses AWS S3 for remote state management.
-
-To avoid potential conflicts, there is no default information provided in this repository for the S3 bucket. The bucket name and region must be configured in the following files:
-
-- Your *localsecrets* file (see the **Github Actions Secrets** section below)
-- scripts/local_feature_deploy.sh
-
-Details on appropriate permissions for the S3 bucket and corresponding AWS IAM user can be found on [Hashicorp's S3 Backend documentation](https://developer.hashicorp.com/terraform/language/settings/backends/s3)
-
-### Github CLI and Github Actions Secrets
-
-#### Github CLI
-
-The Github cli: `gh` will need to be configured for your repository. Run the command **gh auth login** and follow the prompts.  You will need an access token for your Github account as instructed:
-
-```bash
-gh auth login
-
-? What account do you want to log into? GitHub.com
-? You're already logged into github.com. Do you want to re-authenticate? Yes
-? What is your preferred protocol for Git operations? HTTPS
-? Authenticate Git with your GitHub credentials? Yes
-? How would you like to authenticate GitHub CLI? Paste an authentication token
-Tip: you can generate a Personal Access Token here https://github.com/settings/tokens
-The minimum required scopes are 'repo', 'read:org', 'workflow'.
-? Paste your authentication token: ****************************************
-- gh config set -h github.com git_protocol https
-✓ Configured git protocol
-✓ Logged in as <User>
-```
-
-#### Github Actions Secrets
+### Github Actions Secrets
 
 The Github pipeline actions will depend on sourcing some secrets as ephemeral environment variables. To prepare the secrets in the repository:
 
@@ -147,9 +56,9 @@ The Github pipeline actions will depend on sourcing some secrets as ephemeral en
 cp secretstemplate localsecrets
 ```
 
-Fill in `localsecrets` accordingly.
+> Note, `secretstemplate` is intended to be a template file, `localsecrets` is a file that contains credentials but is part of .gitignore and should never be committed into the repository. **`secretstemplate`** is committed to the repository, do not edit it directly!
 
-> Note, `secretstemplate` is intended to be a template file, `localsecrets` is a file that contains credentials but is part of .gitignore and should never be committed into the repository.
+Fill in `localsecrets` accordingly. The configurations in this repository rely on environments created from [pipeline-example-platform](https://github.com/pingidentity/pipeline-example-platform). For the `PINGONE_TARGET_ENVIRONMENT_ID_PROD` and `PINGONE_TARGET_ENVIRONMENT_ID_QA` variables, get the Environment ID for the `prod` and `qa` environments. The Environment ID can be found from the output at the end of a terraform apply (whether Github Actions pipeline, or local) or from the PingOne console directly. For customer and workforce application development and onboarding, set up another persistent environment named `dev` via the platform repository. Enter the corresponding Environment ID into localsecrets for `PINGONE_TARGET_ENVIRONMENT_ID_DEV`. This should leave you with three persistent environments `prod`, `qa` and `dev`, each with a key-value pair in the `localsecrets file`
 
 Run the following to upload localsecrets to Github:
 
@@ -163,7 +72,7 @@ unset _secrets
 
 ### Deploy Prod and QA
 
-The final step before creating new features is to deploy the static environments `prod` and `qa`.
+The final step before creating new features is to deploy application configuration for `prod` and `qa`.
 
 Under the **Actions** section in Github, locate the failed **Initial commit** workflow run from the creation of the repository.  Click "Re-run jobs" and choose "Re-run all jobs". If your secrets are configured correctly, this should result in the successful deployment of a new environment named "prod" in your PingOne account.
 
@@ -194,7 +103,7 @@ Now that the repository and pipeline are configured, the standard git flow can b
 
 ![Create a branch](./img/createabranch.png "Create a branch")
 
-3. After the Github Actions pipeline completes, log in to your PingOne account with a user that has appropriate roles. This user may be the organization administrator with which you signed up for the trial or a development user if you have configured roles for it. PingOne should show a new environment with a name similar to your GitHub issue title.
+3. After the Github Actions pipeline completes, log in to your PingOne account with a user that has appropriate roles. This user may be the organization administrator with which you signed up for the trial or a development user if you have configured roles for it. The corresponding dev environment should now have additional application and DaVinci configuration.
 
 4. Build the requested configuration by navigating into the environment: **Applications** > **Applications** > Click the blue **+** and provide the information:
 
