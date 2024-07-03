@@ -1,4 +1,3 @@
-
 ##########################################################################
 # davinci.tf - Declarations to create DaVinci assets
 # {@link https://registry.terraform.io/providers/pingidentity/davinci/latest}
@@ -9,15 +8,9 @@
 #########################################################################
 # {@link https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/data-sources/connections}
 
-
-resource "time_sleep" "davinci" {
-  create_duration = "120s"
-  depends_on      = [pingone_environment.my_environment]
-}
-
+// because connections are managed by platform, we can read them from here. 
 data "davinci_connections" "read_all" {
-  environment_id = pingone_environment.my_environment.id
-  depends_on     = [ time_sleep.davinci ]
+  environment_id = var.pingone_target_environment_id
 }
 
 #########################################################################
@@ -26,23 +19,20 @@ data "davinci_connections" "read_all" {
 # {@link https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/resources/flow}
 
 resource "davinci_flow" "registration_flow" {
-  depends_on = [
-    data.davinci_connections.read_all
-  ]
+  flow_json = file("../base/davinci_flows/davinci-api-reg-authn-flow.json")
 
-  flow_json = file("davinci-api-reg-authn-flow.json")
-  deploy    = true
-
-  environment_id = pingone_environment.my_environment.id
+  environment_id = var.pingone_target_environment_id
 
   connection_link {
     id   = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "Http"], 0)
-    name = "Http"
+    name = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "Http"], 0)
+    replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
   }
 
   connection_link {
-    id   = data.davinci_connection.ping_sso.id
-    name = "PingOne"
+    id   = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "PingOne"], 0)
+    name   = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "PingOne"], 0)
+    replace_import_connection_id = "94141bf2f1b9b59a5f5365ff135e02bb"
   }
 }
 
@@ -53,7 +43,7 @@ resource "davinci_flow" "registration_flow" {
 
 resource "davinci_application" "registration_flow_app" {
   name           = "DaVinci API Registration Sample Application"
-  environment_id = pingone_environment.my_environment.id
+  environment_id = var.pingone_target_environment_id
   depends_on     = [data.davinci_connections.read_all]
   oauth {
     enabled = true
@@ -65,17 +55,10 @@ resource "davinci_application" "registration_flow_app" {
       redirect_uris                 = ["${module.pingone_utils.pingone_url_auth_path_full}/rp/callback/openid_connect"]
     }
   }
-
-  saml {
-    values {
-      enabled                = false
-      enforce_signed_request = false
-    }
-  }
 }
 
 resource "davinci_application_flow_policy" "registration_flow_app_policy" {
-  environment_id = pingone_environment.my_environment.id
+  environment_id = var.pingone_target_environment_id
   application_id = davinci_application.registration_flow_app.id
   name           = "DaVinci API Registration Sample Policy"
   status         = "enabled"
@@ -84,4 +67,13 @@ resource "davinci_application_flow_policy" "registration_flow_app_policy" {
     version_id = -1
     weight     = 100
   }
+}
+
+resource "local_file" "env_config" {
+  content  = "window._env_ = {\n  pingOneDomain: \"${module.pingone_utils.pingone_domain_suffix}\",\n  companyId: \"${davinci_application.registration_flow_app.environment_id}\",\n  apiKey: \"${davinci_application.registration_flow_app.api_keys.prod}\",\n  policyId: \"${davinci_application_flow_policy.registration_flow_app_policy.id}\"\n};"
+  filename = "../../sample-app/global.js"
+}
+
+output "env_config" {
+  value = local_file.env_config.content
 }

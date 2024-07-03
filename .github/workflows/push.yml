@@ -52,6 +52,7 @@ jobs:
         case $_branch in
           prod)
             _tfdir=terraform/prod
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
             terraform -chdir=${_tfdir} init \
               -backend-config="bucket=$TF_VAR_tf_state_bucket" \
               -backend-config="region=$TF_VAR_tf_state_region" \
@@ -59,6 +60,7 @@ jobs:
             ;;
           qa)
             _tfdir=terraform/qa
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
             terraform -chdir=${_tfdir} init \
               -backend-config="bucket=$TF_VAR_tf_state_bucket" \
               -backend-config="region=$TF_VAR_tf_state_region" \
@@ -66,6 +68,7 @@ jobs:
             ;;
           *)
             _tfdir=terraform/dev
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_DEV}"
             terraform -chdir=${_tfdir} init \
               -backend-config="bucket=$TF_VAR_tf_state_bucket" \
               -backend-config="region=$TF_VAR_tf_state_region" \
@@ -96,6 +99,7 @@ jobs:
         case $_branch in
           prod)
             _tfdir=terraform/prod
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
             terraform -chdir=${_tfdir} init \
               -backend-config="bucket=$TF_VAR_tf_state_bucket" \
               -backend-config="region=$TF_VAR_tf_state_region" \
@@ -103,6 +107,7 @@ jobs:
             ;;
           qa)
             _tfdir=terraform/qa
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
             terraform -chdir=${_tfdir} init \
               -backend-config="bucket=$TF_VAR_tf_state_bucket" \
               -backend-config="region=$TF_VAR_tf_state_region" \
@@ -110,6 +115,7 @@ jobs:
             ;;
           *)
             _tfdir=terraform/dev
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_DEV}"
             terraform -chdir=${_tfdir} init \
               -backend-config="bucket=$TF_VAR_tf_state_bucket" \
               -backend-config="region=$TF_VAR_tf_state_region" \

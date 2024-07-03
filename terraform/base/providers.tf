@@ -1,3 +1,16 @@
+terraform {
+  required_version = ">= 1.6.0"
+  required_providers {
+    pingone = {
+      source  = "pingidentity/pingone"
+      version = ">= 0.27.0, < 1.0.0"
+    }
+    davinci = {
+      source  = "pingidentity/davinci"
+      version = ">= 0.2.1, < 1.0.0"
+    }
+  }
+}
 
 ##########################################################################
 # main.tf - Declarations for modules and providers to 
@@ -13,28 +26,14 @@
 # PingOne Environment Module
 # {@link https://registry.terraform.io/modules/terraform-pingidentity-modules/environment/pingone/latest?tab=inputs}
 
-resource "pingone_environment" "my_environment" {
-  name        = var.env_name
-  description = "DaVinci API Registration Sample App integration environment provisioned with Terraform. By PingIdentity, Technical Enablement."
-  type        = "SANDBOX"
-  license_id  = var.license_id
-
-  service {
-    type = "MFA"
-  }
-  service {
-    type = "DaVinci"
-  }
-}
-
 # PingOne Utilities Module
 # {@link https://registry.terraform.io/modules/pingidentity/utils/pingone/latest}
 module "pingone_utils" {
   source  = "pingidentity/utils/pingone"
   version = "0.0.8"
 
-  environment_id = pingone_environment.my_environment.id
-  region         = var.region
+  environment_id = var.pingone_target_environment_id
+  region         = var.pingone_client_region
 }
 
 ##############################################
@@ -43,11 +42,10 @@ module "pingone_utils" {
 # {@link https://registry.terraform.io/providers/pingidentity/pingone/latest/docs}
 
 provider "pingone" {
-  client_id                    = var.worker_id
-  client_secret                = var.worker_secret
-  environment_id               = var.pingone_environment_id
-  region                       = var.region
-  force_delete_production_type = false
+  client_id      = var.pingone_client_id
+  client_secret  = var.pingone_client_secret
+  environment_id = var.pingone_client_environment_id
+  region         = var.pingone_client_region
 }
 
 ##############################################
@@ -56,8 +54,8 @@ provider "pingone" {
 # {@link https://registry.terraform.io/providers/pingidentity/davinci/latest/docs}
 
 provider "davinci" {
-  username       = var.admin_username
-  password       = var.admin_password
-  region         = var.region
-  environment_id = var.pingone_environment_id
+  username       = var.pingone_davinci_admin_username
+  password       = var.pingone_davinci_admin_password
+  region         = var.pingone_client_region
+  environment_id = var.pingone_davinci_admin_environment_id
 }
