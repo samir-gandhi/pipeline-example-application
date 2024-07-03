@@ -5,6 +5,7 @@ on:
     branches-ignore:
       - 'qa'
       - 'prod'
+      - 'dev'
 
 jobs:
   prune:
@@ -28,7 +29,6 @@ jobs:
         echo "base: ${GITHUB_BASE_REF}"
         echo "ref: ${{ github.event.ref }}"
         _ref=$(echo "${{ github.event.ref }}" | sed -e "s#refs/heads/##g")
-        export TF_VAR_pingone_environment_name="$(echo "${_ref}" | sed -e "s#refs/heads/##g")"
         terraform -chdir=${_tfdir} init \
           -backend-config="bucket=$TF_VAR_tf_state_bucket" \
           -backend-config="region=$TF_VAR_tf_state_region" \

@@ -1,6 +1,10 @@
 name: Feature Deploy Push
 on: 
   push:
+    branches:
+      - 'qa'
+      - 'prod'
+      - 'dev'
 
 
 jobs:
