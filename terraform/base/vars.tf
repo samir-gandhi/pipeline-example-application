@@ -30,6 +30,6 @@ variable "pingone_force_delete_population" {
   type        = bool
 }
 variable "pingone_target_environment_id" {
-  type = string
+  type        = string
   description = "The target environment id to deploy the application to"
 }
