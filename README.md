@@ -59,7 +59,7 @@ cp secretstemplate localsecrets
 
 Fill in `localsecrets` accordingly. The configurations in this repository rely on environments created from [pipeline-example-platform](https://github.com/pingidentity/pipeline-example-platform). For the `PINGONE_TARGET_ENVIRONMENT_ID_PROD` and `PINGONE_TARGET_ENVIRONMENT_ID_QA` variables, get the Environment ID for the `prod` and `qa` environments. The Environment ID can be found from the output at the end of a terraform apply (whether from the Github Actions pipeline, or local) or from the PingOne console directly.
 
-If you have not created a dev environment in your PingOne account, you can do so by running the following command to instantiate one matching prod and qa:
+If you do not have a dev environment in your PingOne account, you can do so by running the following command to create one matching prod and qa for customer and workforce application development and onboarding:
 
 ```bash
 git checkout prod
@@ -68,7 +68,7 @@ git checkout -b dev
 git push origin dev
 ```
 
-For customer and workforce application development and onboarding, set up another persistent environment named `dev` using the platform repository. Enter the corresponding Environment ID into localsecrets in your application repository for `PINGONE_TARGET_ENVIRONMENT_ID_DEV`. This action will leave you with three persistent environments `prod`, `qa` and `dev`, each with a corresponding environment variable definition pair in the `localsecrets` file.
+Enter the corresponding Environment ID into localsecrets in your application repository for `PINGONE_TARGET_ENVIRONMENT_ID_DEV`. This action will leave you with three persistent environments `prod`, `qa` and `dev`, each with a corresponding environment variable definition pair in the `localsecrets` file.
 
 ![PingOne Environments](./img/pingOneEnvs.png "PingOne Environments")
 
