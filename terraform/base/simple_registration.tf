@@ -24,21 +24,21 @@ resource "davinci_flow" "registration_flow" {
   environment_id = var.pingone_target_environment_id
 
   connection_link {
-    id   = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "Http"], 0)
-    name = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "Http"], 0)
+    id                           = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "Http"], 0)
+    name                         = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "Http"], 0)
     replace_import_connection_id = "867ed4363b2bc21c860085ad2baa817d"
   }
 
   connection_link {
-    id   = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "PingOne"], 0)
-    name   = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "PingOne"], 0)
+    id                           = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "PingOne"], 0)
+    name                         = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "PingOne"], 0)
     replace_import_connection_id = "94141bf2f1b9b59a5f5365ff135e02bb"
   }
   connection_link {
-    id   = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "Annotation"], 0)
-    name   = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "Annotation"], 0)
+    id                           = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "Annotation"], 0)
+    name                         = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "Annotation"], 0)
     replace_import_connection_id = "921bfae85c38ed45045e07be703d86b8"
-  
+
   }
 }
 
@@ -86,17 +86,17 @@ output "env_config" {
 
 # Define a Docker image resource
 resource "docker_image" "registration" {
-  name         = "simple-registration:latest" 
+  name = "simple-registration:latest"
   build {
     # Path to the directory containing Dockerfile and other necessary files
-    context    = "../base/sample-app" 
+    context = "../base/sample-app"
   }
   triggers = {
     # dir_sha1 = sha1(join("", [for f in fileset(path.cwd, "../base/sample-app/**"): filesha1("${path.cwd}/${f}")]))
     # dir_sha1 = sha1(join("", [for f in fileset(path.module, "../base"): filesha1(f)]))
     dir_sha1 = sha1("abc1234")
   }
-  depends_on = [ local_file.env_config ]
+  depends_on = [local_file.env_config]
 }
 
 # Define a Docker container resource
