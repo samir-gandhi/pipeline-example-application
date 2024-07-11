@@ -9,6 +9,10 @@ terraform {
       source  = "pingidentity/davinci"
       version = ">= 0.2.1, < 1.0.0"
     }
+    docker = {
+      source = "kreuzwerker/docker"
+      version = "~> 3.0.1"
+    }
   }
 }
 

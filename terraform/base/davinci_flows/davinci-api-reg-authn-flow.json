@@ -1,14 +1,15 @@
 {
-  "companyId": "ce855fb9-a499-43db-9deb-aa02627a1b31",
+  "companyId": "b1de511b-f9af-4c90-93da-79c212d7ed14",
   "authTokenExpireIds": [],
   "connectorIds": [
     "pingOneSSOConnector",
-    "httpConnector"
+    "httpConnector",
+    "annotationConnector"
   ],
-  "createdDate": 1687818538469,
-  "currentVersion": 6,
-  "customerId": "b04124bbd883a15b0337279dd6a1c49e",
-  "deployedDate": 1687818541854,
+  "createdDate": 1720713875595,
+  "currentVersion": 36,
+  "customerId": "ee728871d18a3b9b273c87192cee4a18",
+  "deployedDate": 1720713876640,
   "description": "Imported on Tue May 16 2023 19:35:07 GMT+0000 (Coordinated Universal Time)",
   "flowStatus": "enabled",
   "inputSchemaCompiled": {
@@ -40,31 +41,30 @@
   "isInputSchemaSaved": true,
   "isOutputSchemaSaved": false,
   "name": "PingOne DaVinci API Registration Example",
-  "publishedVersion": 6,
+  "publishedVersion": 36,
   "settings": {
     "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
     "intermediateLoadingScreenCSS": "",
     "intermediateLoadingScreenHTML": "",
-    "logLevel": 3
+    "logLevel": 2,
+    "scrubSensitiveInfo": true
   },
-  "trigger": {},
-  "updatedDate": 1687818541854,
-  "flowId": "9050f8112106ae2cbc97fa6f14c1677e",
-  "versionId": 6,
+  "timeouts": "null",
+  "updatedDate": 1720713876684,
+  "flowId": "4eb25f1e9bad36b2e3f24a34466d98fb",
+  "versionId": 36,
   "graphData": {
     "elements": {
       "nodes": [
         {
           "data": {
-            "id": "m4sfmek769",
-            "nodeType": "CONNECTION",
+            "capabilityName": "userLookup",
             "connectionId": "94141bf2f1b9b59a5f5365ff135e02bb",
             "connectorId": "pingOneSSOConnector",
-            "name": "PingOne",
+            "id": "m4sfmek769",
             "label": "PingOne",
-            "status": "configured",
-            "capabilityName": "userLookup",
-            "type": "action",
+            "name": "PingOne",
+            "nodeType": "CONNECTION",
             "properties": {
               "matchAttributes": {
                 "value": [
@@ -73,8 +73,13 @@
               },
               "userIdentifierForFindUser": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{global.parameters.email}}\",\n        \"tooltip\": \"{{global.parameters.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              },
+              "nodeTitle": {
+                "value": "Check User Exists"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 277,
@@ -92,8 +97,8 @@
         {
           "data": {
             "id": "yqi3iaujxx",
-            "nodeType": "EVAL",
             "label": "Evaluator",
+            "nodeType": "EVAL",
             "properties": {
               "0di26c5iy7": {
                 "value": "anyTriggersFalse"
@@ -118,15 +123,13 @@
         },
         {
           "data": {
-            "id": "6i7lwwrw94",
-            "nodeType": "CONNECTION",
+            "capabilityName": "createUser",
             "connectionId": "94141bf2f1b9b59a5f5365ff135e02bb",
             "connectorId": "pingOneSSOConnector",
-            "name": "PingOne",
+            "id": "6i7lwwrw94",
             "label": "PingOne",
-            "status": "configured",
-            "capabilityName": "createUser",
-            "type": "action",
+            "name": "PingOne",
+            "nodeType": "CONNECTION",
             "properties": {
               "additionalUserProperties": {
                 "value": []
@@ -142,8 +145,13 @@
               },
               "username": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{global.parameters.email}}\",\n        \"tooltip\": \"{{global.parameters.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              },
+              "nodeTitle": {
+                "value": "Create New User"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 667,
@@ -161,8 +169,8 @@
         {
           "data": {
             "id": "hcmfduc8d9",
-            "nodeType": "EVAL",
             "label": "Evaluator",
+            "nodeType": "EVAL",
             "properties": {
               "kc7wrmpc93": {
                 "value": "allTriggersFalse"
@@ -184,15 +192,13 @@
         },
         {
           "data": {
-            "id": "p53gq7n410",
-            "nodeType": "CONNECTION",
+            "capabilityName": "checkPassword",
             "connectionId": "94141bf2f1b9b59a5f5365ff135e02bb",
             "connectorId": "pingOneSSOConnector",
-            "name": "PingOne",
+            "id": "p53gq7n410",
             "label": "PingOne",
-            "status": "configured",
-            "capabilityName": "checkPassword",
-            "type": "action",
+            "name": "PingOne",
+            "nodeType": "CONNECTION",
             "properties": {
               "identifier": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{global.parameters.email}}\",\n        \"tooltip\": \"{{global.parameters.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
@@ -202,8 +208,13 @@
               },
               "password": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{global.parameters.password}}\",\n        \"tooltip\": \"{{global.parameters.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              },
+              "nodeTitle": {
+                "value": "Check Found User's Password"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 667,
@@ -246,15 +257,13 @@
         },
         {
           "data": {
-            "id": "c9u3f1nyw7",
-            "nodeType": "CONNECTION",
+            "capabilityName": "createSuccessResponse",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "c9u3f1nyw7",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "createSuccessResponse",
-            "type": "action",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
               "claimsNameValuePairs": {
                 "value": [
@@ -266,15 +275,23 @@
                     "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"pingIdentity.svg\",\n        \"url\": \"success\",\n        \"data\": \"{{local.6i7lwwrw94.payload.success}}\",\n        \"tooltip\": \"{{local.6i7lwwrw94.payload.success}}\",\n        \"children\": [\n          {\n            \"text\": \"success\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
                   },
                   {
-                    "name": null,
-                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"pingIdentity.svg\",\n        \"url\": \"createdAt\",\n        \"data\": \"{{local.6i7lwwrw94.payload.output.user.createdAt}}\",\n        \"tooltip\": \"{{local.6i7lwwrw94.payload.output.user.createdAt}}\",\n        \"children\": [\n          {\n            \"text\": \"createdAt\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]",
                     "key": 0.08566196004820625,
+                    "name": null,
+                    "nameDefault": "createdAt",
                     "type": "string",
-                    "nameDefault": "createdAt"
+                    "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"pingIdentity.svg\",\n        \"url\": \"createdAt\",\n        \"data\": \"{{local.6i7lwwrw94.payload.output.user.createdAt}}\",\n        \"tooltip\": \"{{local.6i7lwwrw94.payload.output.user.createdAt}}\",\n        \"children\": [\n          {\n            \"text\": \"createdAt\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
                   }
                 ]
+              },
+              "backgroundColor": {
+                "value": "#9dc967ff"
+              },
+              "nodeTitle": {
+                "value": "New User Created"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 1050,
@@ -291,18 +308,16 @@
         },
         {
           "data": {
-            "id": "kc7wrmpc93",
-            "nodeType": "CONNECTION",
+            "capabilityName": "createErrorResponse",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "kc7wrmpc93",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "createErrorResponse",
-            "type": "action",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
               "backgroundColor": {
-                "value": "#d0021bff"
+                "value": "#ffc8c1ff"
               },
               "claimsNameValuePairs": {
                 "value": [
@@ -314,8 +329,13 @@
                     "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"pingIdentity.svg\",\n        \"url\": \"message\",\n        \"data\": \"{{local.6i7lwwrw94.payload.error.message}}\",\n        \"tooltip\": \"{{local.6i7lwwrw94.payload.error.message}}\",\n        \"children\": [\n          {\n            \"text\": \"message\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
                   }
                 ]
+              },
+              "nodeTitle": {
+                "value": "User Creation Failed"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 1050,
@@ -332,15 +352,13 @@
         },
         {
           "data": {
-            "id": "k2eziu1puq",
-            "nodeType": "CONNECTION",
+            "capabilityName": "createSuccessResponse",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "k2eziu1puq",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "createSuccessResponse",
-            "type": "action",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
               "claimsNameValuePairs": {
                 "value": [
@@ -352,8 +370,16 @@
                     "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"pingIdentity.svg\",\n        \"url\": \"success\",\n        \"data\": \"{{local.p53gq7n410.payload.success}}\",\n        \"tooltip\": \"{{local.p53gq7n410.payload.success}}\",\n        \"children\": [\n          {\n            \"text\": \"success\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
                   }
                 ]
+              },
+              "nodeTitle": {
+                "value": "Completed Login"
+              },
+              "backgroundColor": {
+                "value": "#9dc967ff"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 1050,
@@ -370,18 +396,16 @@
         },
         {
           "data": {
-            "id": "jpeg607lcn",
-            "nodeType": "CONNECTION",
+            "capabilityName": "createErrorResponse",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "jpeg607lcn",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "createErrorResponse",
-            "type": "action",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
               "backgroundColor": {
-                "value": "#d0021bff"
+                "value": "#ffc8c1ff"
               },
               "claimsNameValuePairs": {
                 "value": [
@@ -393,12 +417,96 @@
                     "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"pingIdentity.svg\",\n        \"url\": \"message\",\n        \"data\": \"{{local.p53gq7n410.payload.error.message}}\",\n        \"tooltip\": \"{{local.p53gq7n410.payload.error.message}}\",\n        \"children\": [\n          {\n            \"text\": \"message\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
                   }
                 ]
+              },
+              "nodeTitle": {
+                "value": "Password Failed"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 1050,
             "y": 356
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "ar80vi71qv",
+            "nodeType": "ANNOTATION",
+            "name": "Annotation",
+            "connectionId": "921bfae85c38ed45045e07be703d86b8",
+            "connectorId": "annotationConnector",
+            "capabilityName": "updateAnnotationProperties",
+            "type": "action",
+            "properties": {
+              "backgroundColor": {
+                "value": "#4462edff"
+              },
+              "annotationTextColor": {
+                "value": "#ffffffff"
+              },
+              "annotation": {
+                "value": "Simple Registration and Login"
+              }
+            },
+            "status": "configured"
+          },
+          "position": {
+            "x": 633,
+            "y": 77
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "7zmbxl7r8i",
+            "nodeType": "ANNOTATION",
+            "name": "Annotation",
+            "connectionId": "921bfae85c38ed45045e07be703d86b8",
+            "connectorId": "annotationConnector",
+            "capabilityName": "updateAnnotationProperties",
+            "type": "action",
+            "properties": {
+              "backgroundColor": {
+                "value": "#B5DFFF"
+              },
+              "annotationTextColor": {
+                "value": "#000000"
+              },
+              "annotation": {
+                "value": "Check if user exists, and automatically create user if they are not found"
+              },
+              "width": {
+                "value": 200
+              },
+              "height": {
+                "value": 100
+              },
+              "fontSize": {
+                "value": 16
+              }
+            },
+            "status": "configured"
+          },
+          "position": {
+            "x": 330,
+            "y": 150
           },
           "group": "nodes",
           "removed": false,
@@ -620,7 +728,7 @@
     }
   ],
   "flowColor": "#CACED3",
-  "savedDate": 1687818538385,
+  "savedDate": 1720713875463,
   "variables": [],
   "connections": []
 }

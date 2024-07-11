@@ -39,6 +39,8 @@ while ! test -z ${1} ; do
       _command="destroy" ;;
     -g|--generate)
       _command="plan -generate-config-out=generated-platform.tf" ;;
+    -v|--verbose)
+      set -x ;;
     -h|--help)
       exit_usage "" ;;
     *)

@@ -34,6 +34,12 @@ resource "davinci_flow" "registration_flow" {
     name   = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "PingOne"], 0)
     replace_import_connection_id = "94141bf2f1b9b59a5f5365ff135e02bb"
   }
+  connection_link {
+    id   = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "Annotation"], 0)
+    name   = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "Annotation"], 0)
+    replace_import_connection_id = "921bfae85c38ed45045e07be703d86b8"
+  
+  }
 }
 
 #########################################################################
@@ -71,9 +77,43 @@ resource "davinci_application_flow_policy" "registration_flow_app_policy" {
 
 resource "local_file" "env_config" {
   content  = "window._env_ = {\n  pingOneDomain: \"${module.pingone_utils.pingone_domain_suffix}\",\n  companyId: \"${davinci_application.registration_flow_app.environment_id}\",\n  apiKey: \"${davinci_application.registration_flow_app.api_keys.prod}\",\n  policyId: \"${davinci_application_flow_policy.registration_flow_app_policy.id}\"\n};"
-  filename = "../../sample-app/global.js"
+  filename = "../base/sample-app/global.js"
 }
 
 output "env_config" {
   value = local_file.env_config.content
+}
+
+# Define a Docker image resource
+resource "docker_image" "registration" {
+  name         = "simple-registration:latest" 
+  build {
+    # Path to the directory containing Dockerfile and other necessary files
+    context    = "../base/sample-app" 
+  }
+  triggers = {
+    # dir_sha1 = sha1(join("", [for f in fileset(path.cwd, "../base/sample-app/**"): filesha1("${path.cwd}/${f}")]))
+    # dir_sha1 = sha1(join("", [for f in fileset(path.module, "../base"): filesha1(f)]))
+    dir_sha1 = sha1("abc1234")
+  }
+  depends_on = [ local_file.env_config ]
+}
+
+# Define a Docker container resource
+resource "docker_container" "registration" {
+  name  = "simple-registration"
+  image = docker_image.registration.image_id
+  ports {
+    internal = 443
+    external = 1443
+  }
+  ports {
+    internal = 80
+    external = 8080
+  }
+  rm = true
+}
+
+output "dir_sha1" {
+  value = docker_image.registration.triggers.dir_sha1
 }
