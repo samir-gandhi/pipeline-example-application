@@ -39,6 +39,8 @@ while ! test -z ${1} ; do
       _command="destroy" ;;
     -g|--generate)
       _command="plan -generate-config-out=generated-platform.tf" ;;
+    -v|--verbose)
+      set -x ;;
     -h|--help)
       exit_usage "" ;;
     *)
@@ -63,15 +65,19 @@ fi
 ## S3 state bucket configuration
 ## local aws default profile will be used
 ## Specify the bucket name and region
-bucket_name="ping-terraform-demo"
-region="us-west-1"
-key="dev/${_branch}/terraform.tfstate"
+if [ -z "${TF_VAR_tf_state_bucket}" ] || [ -z "${TF_VAR_tf_state_region}" ]; then
+  echo "TF_VAR_tf_state_bucket or TF_VAR_tf_state_region is not set. Please set the appropriate variables in your localsecrets file."
+  exit 1
+fi
+_bucket_name="${TF_VAR_tf_state_bucket}"
+_region="${TF_VAR_tf_state_region}"
+_key="${TF_VAR_tf_state_key_prefix}/${_branch}/terraform.tfstate"
 
 ## terraform init
 terraform -chdir="${TFDIR}" init -migrate-state \
-  -backend-config="bucket=${bucket_name}" \
-  -backend-config="region=${region}" \
-  -backend-config="key=${key}"
+  -backend-config="bucket=${_bucket_name}" \
+  -backend-config="region=${_region}" \
+  -backend-config="key=${_key}"
 
 ## terraform apply
 
