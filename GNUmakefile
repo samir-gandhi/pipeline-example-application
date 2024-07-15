@@ -32,6 +32,6 @@ trivy:
 	@command -v trivy >/dev/null 2>&1 || { echo >&2 "'trivy' is required but not installed. Aborting."; exit 1; }
 	@trivy config ./
 
-devcheck: fmt fmt-check validate tflint trivy
+devcheck: fmt fmt-check validate tflint dvlint trivy
 
-.PHONY: devcheck fmt fmt-check validate tflint trivy
+.PHONY: devcheck fmt fmt-check validate tflint dvlint trivy

@@ -71,7 +71,7 @@ if [ -z "${TF_VAR_tf_state_bucket}" ] || [ -z "${TF_VAR_tf_state_region}" ]; the
 fi
 _bucket_name="${TF_VAR_tf_state_bucket}"
 _region="${TF_VAR_tf_state_region}"
-_key="${TF_VAR_tf_state_key}/${_branch}/terraform.tfstate"
+_key="${TF_VAR_tf_state_key_prefix}/${_branch}/terraform.tfstate"
 
 ## terraform init
 terraform -chdir="${TFDIR}" init -migrate-state \
