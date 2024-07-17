@@ -19,7 +19,7 @@ tflint:
 dvlint:
 	@echo "==> Checking DaVinci Flows with dvlint..."
 	@command -v dvlint >/dev/null 2>&1 || { echo >&2 "'dvlint' is required but not installed. Aborting."; exit 1; }
-	@$(foreach flow,$(wildcard terraform/base/davinci_flows/*),dvlint -f $(flow) -e dv-rule-logo-001 -g dv-rule-annotations-001;)
+	@$(foreach flow,$(wildcard terraform/davinci_flows/*),dvlint -f $(flow) -e dv-rule-logo-001 -g dv-rule-annotations-001;)
 
 
 validate:
