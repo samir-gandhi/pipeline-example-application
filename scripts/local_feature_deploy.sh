@@ -55,7 +55,7 @@ done
 checkVars
 
 _branch=$(git rev-parse --abbrev-ref HEAD)
-export TFDIR="terraform/dev"
+export TFDIR="terraform"
 
 if test "$_branch" = "prod" || test  "$_branch" = qa ; then
   echo "You are on a non-dev branch. Please checkout to your feature branch to run this script."
@@ -71,7 +71,7 @@ if [ -z "${TF_VAR_tf_state_bucket}" ] || [ -z "${TF_VAR_tf_state_region}" ]; the
 fi
 _bucket_name="${TF_VAR_tf_state_bucket}"
 _region="${TF_VAR_tf_state_region}"
-_key="${TF_VAR_tf_state_key_prefix}/${_branch}/terraform.tfstate"
+_key="${TF_VAR_tf_state_key_prefix}/dev/${_branch}/terraform.tfstate"
 
 ## terraform init
 terraform -chdir="${TFDIR}" init -migrate-state \
