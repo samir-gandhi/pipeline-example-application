@@ -1,14 +1,22 @@
 DEV_DIR:=./terraform
+
+# dvlint options
+DVLINT_RULE_PACK:=@ping-identity/dvlint-base-rule-pack
+DVLINT_EXCLUDE_RULES:=dv-rule-logo-001
+DVLINT_INCLUDE_RULES:=
+DVLINT_IGNORE_RULES:=dv-rule-annotations-001,dv-rule-empty-flow-001
 default: devcheck
 
-fmt:
-	@echo "==> Formatting Terraform code with terraform fmt..."
+
+check-for-terraform:
 	@command -v terraform >/dev/null 2>&1 || { echo >&2 "'terraform' is required but not installed. Aborting."; exit 1; }
+
+fmt: check-for-terraform
+	@echo "==> Formatting Terraform code with terraform fmt..."
 	@terraform fmt -recursive .
 
-fmt-check:
+fmt-check: check-for-terraform
 	@echo "==> Checking Terraform code with terraform fmt..."
-	@command -v terraform >/dev/null 2>&1 || { echo >&2 "'terraform' is required but not installed. Aborting."; exit 1; }
 	@terraform fmt -recursive -check .
 
 tflint:
@@ -18,14 +26,25 @@ tflint:
 
 dvlint:
 	@echo "==> Checking DaVinci Flows with dvlint..."
+	@command -v jq >/dev/null 2>&1 || { echo >&2 "'jq' is required but not installed. Aborting."; exit 1; }
 	@command -v dvlint >/dev/null 2>&1 || { echo >&2 "'dvlint' is required but not installed. Aborting."; exit 1; }
-	@$(foreach flow,$(wildcard terraform/davinci_flows/*),dvlint -f $(flow) -e dv-rule-logo-001 -g dv-rule-annotations-001;)
+	@find . -name '*.json' | while read -r file; do \
+		if jq -e -r '.companyId' $$file >/dev/null; then \
+			dvlint -f $$file \
+				--rulePacks "$(DVLINT_RULE_PACK)" \
+				--excludeRule "$(DVLINT_EXCLUDE_RULES)" \
+				--ignoreRule "$(DVLINT_IGNORE_RULES)" \
+				--includeRule "$(DVLINT_INCLUDE_RULES)" \
+				|| exit 1; \
+		fi; \
+	done
 
 
-validate:
+validate: check-for-terraform
 	@echo "==> Validating Terraform code with terraform validate..."
-	@command -v terraform >/dev/null 2>&1 || { echo >&2 "'terraform' is required but not installed. Aborting."; exit 1; }
-	@terraform -chdir=$(DEV_DIR) validate
+	@if [ -d "./$(DEV_DIR)" ]; then \
+		terraform -chdir=$(DEV_DIR) validate; \
+	fi
 
 trivy:
 	@echo "==> Checking Terraform code with trivy..."

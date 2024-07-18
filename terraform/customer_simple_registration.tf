@@ -95,12 +95,16 @@ resource "docker_image" "registration" {
     # Path to the directory containing Dockerfile and other necessary files
     context = "./sample-app"
   }
+  # triggers = {
+  #   dir_sha1 = sha1(join("", [for f in fileset(path.cwd, ".sample-app/**"): filesha1("${path.cwd}/${f}")]))
+  #   # dir_sha1 = sha1(join("", [for f in fileset(path.module, "../base"): filesha1(f)]))
+  #   # dir_sha1 = sha1("abc1234")
+  # }
   triggers = {
-    # dir_sha1 = sha1(join("", [for f in fileset(path.cwd, "../base/sample-app/**"): filesha1("${path.cwd}/${f}")]))
-    # dir_sha1 = sha1(join("", [for f in fileset(path.module, "../base"): filesha1(f)]))
-    dir_sha1 = sha1("abc1234")
+    dir_sha1 = sha1(join("", [for f in fileset(path.module, "./sample-app/**") : filesha1(f)]))
   }
-  depends_on = [local_file.env_config]
+  force_remove = true
+  depends_on   = [local_file.env_config]
 }
 
 # Define a Docker container resource
@@ -112,10 +116,10 @@ resource "docker_container" "registration" {
     external = 1443
   }
   ports {
-    internal = 80
+    internal = 8080
     external = 8080
   }
-  # rm = true
+  rm = true
 }
 
 output "dir_sha1" {
