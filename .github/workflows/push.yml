@@ -1,10 +1,6 @@
 name: Feature Deploy Push
 on: 
   push:
-    branches:
-      - 'qa'
-      - 'prod'
-      - 'dev'
 
 
 jobs:
@@ -31,10 +27,34 @@ jobs:
       with:
         tflint_version: latest
 
-    - name: tflint
-      run: |
-        echo "***Running terraform lint***"
-        tflint --recursive
+  davincilint:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    name: Node  sample
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run linting rules and tests
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: |- 
+          DVLINT_RULE_PACK:="@ping-identity/dvlint-base-rule-pack"
+          DVLINT_EXCLUDE_RULES:="dv-rule-logo-001"
+          DVLINT_INCLUDE_RULES:=""
+          DVLINT_IGNORE_RULES:="dv-rule-annotations-001,dv-rule-empty-flow-001"
+          _tfdir="./terraform"
+          npm install -g @ping-identity/dvlint
+          npm install -g @ping-identity/dvlint-base-rule-pack
+          find ${_tfdir} -name '*.json' | while read -r file; do
+            if jq -e -r '.companyId' $$file >/dev/null; then
+              dvlint -f $$file \
+                --rulePacks "$(DVLINT_RULE_PACK)" \
+                --excludeRule "${DVLINT_EXCLUDE_RULES}" \
+                --ignoreRule "${DVLINT_IGNORE_RULES}" \
+                --includeRule "${DVLINT_INCLUDE_RULES}" \
+              || exit 1
+            fi
+          done
 
   validate:
     needs: [lint]
@@ -50,35 +70,24 @@ jobs:
     - run: |-
         echo $TERRAFORM_ENV_BASE64 | base64 -d > tfvars
         source tfvars
-        _tfdir=""
+        _tfdir=terraform
         _branch=$(echo "${GITHUB_REF}" | sed -e "s#refs/heads/##g")
         export TF_VAR_pingone_environment_name=${_branch}
         case $_branch in
           prod)
-            _tfdir=terraform/prod
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
-            terraform -chdir=${_tfdir} init \
-              -backend-config="bucket=$TF_VAR_tf_state_bucket" \
-              -backend-config="region=$TF_VAR_tf_state_region" \
-              -backend-config="key=application-state/prod/terraform.tfstate"
+            _stateKey="${TF_VAR_tf_state_key_prefix}/prod/terraform.tfstate"
             ;;
           qa)
-            _tfdir=terraform/qa
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
-            terraform -chdir=${_tfdir} init \
-              -backend-config="bucket=$TF_VAR_tf_state_bucket" \
-              -backend-config="region=$TF_VAR_tf_state_region" \
-              -backend-config="key=application-state/qa/terraform.tfstate"
+            _stateKey="${TF_VAR_tf_state_key_prefix}/qa/terraform.tfstate"
             ;;
           *)
-            _tfdir=terraform/dev
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_DEV}"
-            terraform -chdir=${_tfdir} init \
-              -backend-config="bucket=$TF_VAR_tf_state_bucket" \
-              -backend-config="region=$TF_VAR_tf_state_region" \
-              -backend-config="key=${TF_VAR_tf_state_key_prefix}/${TF_VAR_pingone_environment_name}/terraform.tfstate"
+            _stateKey="${TF_VAR_tf_state_key_prefix}/dev/${_branch}/terraform.tfstate"
             ;;
         esac
+        terraform -chdir=${_tfdir} init \
+          -backend-config="bucket=$TF_VAR_tf_state_bucket" \
+          -backend-config="region=$TF_VAR_tf_state_region" \
+          -backend-config="key=${_stateKey}"
         echo "***Running terraform validate***"
         terraform -chdir=${_tfdir} validate
         
@@ -97,34 +106,23 @@ jobs:
     - run: |-
         echo $TERRAFORM_ENV_BASE64 | base64 -d > tfvars
         source tfvars
-        _tfdir=""
+        _tfdir=terraform
         _branch=$(echo "${GITHUB_REF}" | sed -e "s#refs/heads/##g")
         export TF_VAR_pingone_environment_name=${_branch}
         case $_branch in
           prod)
-            _tfdir=terraform/prod
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
-            terraform -chdir=${_tfdir} init \
-              -backend-config="bucket=$TF_VAR_tf_state_bucket" \
-              -backend-config="region=$TF_VAR_tf_state_region" \
-              -backend-config="key=application-state/prod/terraform.tfstate"
+            _stateKey="${TF_VAR_tf_state_key_prefix}/prod/terraform.tfstate"
             ;;
           qa)
-            _tfdir=terraform/qa
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
-            terraform -chdir=${_tfdir} init \
-              -backend-config="bucket=$TF_VAR_tf_state_bucket" \
-              -backend-config="region=$TF_VAR_tf_state_region" \
-              -backend-config="key=application-state/qa/terraform.tfstate"
+            _stateKey="${TF_VAR_tf_state_key_prefix}/qa/terraform.tfstate"
             ;;
           *)
-            _tfdir=terraform/dev
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_DEV}"
-            terraform -chdir=${_tfdir} init \
-              -backend-config="bucket=$TF_VAR_tf_state_bucket" \
-              -backend-config="region=$TF_VAR_tf_state_region" \
-              -backend-config="key=${TF_VAR_tf_state_key_prefix}/${TF_VAR_pingone_environment_name}/terraform.tfstate"
+            _stateKey="${TF_VAR_tf_state_key_prefix}/dev/${_branch}/terraform.tfstate"
             ;;
         esac
+        terraform -chdir=${_tfdir} init \
+          -backend-config="bucket=$TF_VAR_tf_state_bucket" \
+          -backend-config="region=$TF_VAR_tf_state_region" \
+          -backend-config="key=${_stateKey}"
         echo "***Running terraform apply***"
         terraform -chdir=${_tfdir} apply --auto-approve
