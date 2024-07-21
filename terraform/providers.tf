@@ -8,7 +8,7 @@ module "pingone_utils" {
   version = "0.1.0"
 
   environment_id = var.pingone_target_environment_id
-  region_code         = var.pingone_client_region_code
+  region_code    = var.pingone_client_region_code
 }
 
 ##############################################
