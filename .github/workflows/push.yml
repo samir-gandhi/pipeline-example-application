@@ -117,7 +117,8 @@ jobs:
             _stateKey="${TF_VAR_tf_state_key_prefix}/qa/terraform.tfstate"
             ;;
           *)
-            _stateKey="${TF_VAR_tf_state_key_prefix}/dev/${_branch}/terraform.tfstate"
+            echo "Local feature branch detected, skipping deployment"
+            exit 0
             ;;
         esac
         terraform -chdir=${_tfdir} init \
@@ -125,4 +126,5 @@ jobs:
           -backend-config="region=$TF_VAR_tf_state_region" \
           -backend-config="key=${_stateKey}"
         echo "***Running terraform apply***"
+        if ${_branch} == 
         terraform -chdir=${_tfdir} apply --auto-approve

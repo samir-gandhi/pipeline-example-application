@@ -31,25 +31,6 @@ resource "davinci_flow" "registration_flow" {
 # PingOne DaVinci - Create an application and flow policy for the flow above
 #########################################################################
 # {@link https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/resources/application}
-locals {
-  is_north_america = (var.pingone_client_region_code == "NORTHAMERICA" || var.pingone_client_region_code == "NA" || var.pingone_client_region_code == "COM")
-  is_europe        = (var.pingone_client_region_code == "EUROPE" || var.pingone_client_region_code == "EU")
-  is_canada        = (var.pingone_client_region_code == "CANADA" || var.pingone_client_region_code == "CA")
-  is_asia_pacific  = (var.pingone_client_region_code == "ASIAPACIFIC" || var.pingone_client_region_code == "AP" || var.pingone_client_region_code == "ASIA")
-
-  ###########################################
-  # Domain Suffixes
-  ###########################################
-  pingone_domain_suffix_north_america = local.is_north_america ? "com" : ""
-  pingone_domain_suffix_europe        = local.is_europe ? "eu" : ""
-  pingone_domain_suffix_canada        = local.is_canada ? "ca" : ""
-  pingone_domain_suffix_asia_pacific  = local.is_asia_pacific ? "asia" : ""
-  pingone_domain_suffix               = coalesce(local.pingone_domain_suffix_north_america, local.pingone_domain_suffix_europe, local.pingone_domain_suffix_canada, local.pingone_domain_suffix_asia_pacific)
-  custom_domain                       = ""
-  pingone_url_auth_domain             = coalesce(local.custom_domain, format("auth.pingone.%s", local.pingone_domain_suffix))
-  pingone_url_auth_path               = format("https://%s", local.pingone_url_auth_domain)
-  pingone_url_auth_path_full          = local.custom_domain != "" ? local.pingone_url_auth_path : format("%s/%s", local.pingone_url_auth_path, var.pingone_target_environment_id)
-}
 
 resource "davinci_application" "registration_flow_app" {
   name           = "DaVinci API Registration Sample Application"
@@ -62,7 +43,7 @@ resource "davinci_application" "registration_flow_app" {
       allowed_scopes                = ["openid", "profile"]
       enabled                       = true
       enforce_signed_request_openid = false
-      redirect_uris                 = ["${local.pingone_url_auth_path_full}/rp/callback/openid_connect"]
+      redirect_uris                 = ["${module.pingone_utils.pingone_url_auth_path_full}/rp/callback/openid_connect"]
     }
   }
 }
@@ -80,7 +61,7 @@ resource "davinci_application_flow_policy" "registration_flow_app_policy" {
 }
 
 resource "local_file" "env_config" {
-  content  = "window._env_ = {\n  pingOneDomain: \"${local.pingone_domain_suffix}\",\n  companyId: \"${davinci_application.registration_flow_app.environment_id}\",\n  apiKey: \"${davinci_application.registration_flow_app.api_keys.prod}\",\n  policyId: \"${davinci_application_flow_policy.registration_flow_app_policy.id}\"\n};"
+  content  = "window._env_ = {\n  pingOneDomain: \"${module.pingone_utils.pingone_domain_suffix}\",\n  companyId: \"${davinci_application.registration_flow_app.environment_id}\",\n  apiKey: \"${davinci_application.registration_flow_app.api_keys.prod}\",\n  policyId: \"${davinci_application_flow_policy.registration_flow_app_policy.id}\"\n};"
   filename = "./sample-app/global.js"
 }
 

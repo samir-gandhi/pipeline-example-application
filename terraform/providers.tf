@@ -1,40 +1,15 @@
-terraform {
-  required_version = ">= 1.6.0"
-  required_providers {
-    pingone = {
-      source  = "pingidentity/pingone"
-      version = "~> 1.0.0"
-    }
-    davinci = {
-      source  = "pingidentity/davinci"
-      version = ">= 0.2.1, < 1.0.0"
-    }
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 3.0.1"
-    }
-    local = {
-      source  = "hashicorp/local"
-      version = "~> 2.5.1"
-    }
-  }
-  backend "s3" {
-  }
-}
-
-##########################################################################
-# main.tf - Declarations for modules and providers to 
-# create infrastructure.
-# {@link https://developer.hashicorp.com/terraform/language/modules}
-# {@link https://developer.hashicorp.com/terraform/language/providers}
-##########################################################################
-
 ##############################################
 # PingOne Module
 ##############################################
+# PingOne Utilities Module
+# {@link https://registry.terraform.io/modules/pingidentity/utils/pingone/latest}
+module "pingone_utils" {
+  source  = "pingidentity/utils/pingone"
+  version = "0.1.0"
 
-# PingOne Environment Module
-# {@link https://registry.terraform.io/modules/terraform-pingidentity-modules/environment/pingone/latest?tab=inputs}
+  environment_id = var.pingone_target_environment_id
+  region_code         = var.pingone_client_region_code
+}
 
 ##############################################
 # PingOne Provider
