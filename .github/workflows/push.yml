@@ -95,7 +95,7 @@ jobs:
   deploy:
     if: ${{ !contains(github.event.commits[0].message, '[skip ci]')}}
     name: Deploy
-    # needs: [validate]
+    needs: [validate]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
