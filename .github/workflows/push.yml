@@ -46,7 +46,7 @@ jobs:
         _tfdir="./terraform"
         npm install -g @ping-identity/dvlint
         npm install -g ${DVLINT_RULE_PACK}
-        find ${_tfdir} -name '*.json' | while read -r file; do
+        find ${_tfdir} -name "*.json" | while read -r file; do
           if jq -e -r '.companyId' $$file >/dev/null; then
             dvlint -f $$file \
               --rulePacks "${DVLINT_RULE_PACK}" \
