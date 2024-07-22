@@ -28,33 +28,34 @@ jobs:
         tflint_version: latest
 
   davincilint:
+    needs: [lint]
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    name: Node  sample
+    name: davinci lint
     steps:
-      - uses: actions/checkout@v3
-      - name: Run linting rules and tests
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - run: |- 
-          DVLINT_RULE_PACK:="@ping-identity/dvlint-base-rule-pack"
-          DVLINT_EXCLUDE_RULES:="dv-rule-logo-001"
-          DVLINT_INCLUDE_RULES:=""
-          DVLINT_IGNORE_RULES:="dv-rule-annotations-001,dv-rule-empty-flow-001"
-          _tfdir="./terraform"
-          npm install -g @ping-identity/dvlint
-          npm install -g @ping-identity/dvlint-base-rule-pack
-          find ${_tfdir} -name '*.json' | while read -r file; do
-            if jq -e -r '.companyId' $$file >/dev/null; then
-              dvlint -f $$file \
-                --rulePacks "$(DVLINT_RULE_PACK)" \
-                --excludeRule "${DVLINT_EXCLUDE_RULES}" \
-                --ignoreRule "${DVLINT_IGNORE_RULES}" \
-                --includeRule "${DVLINT_INCLUDE_RULES}" \
-              || exit 1
-            fi
-          done
+    - uses: actions/checkout@v3
+    - name: Run linting rules and tests
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+    - run: |- 
+        DVLINT_RULE_PACK='@ping-identity/dvlint-base-rule-pack'
+        DVLINT_EXCLUDE_RULES='dv-rule-logo-001'
+        DVLINT_INCLUDE_RULES=''
+        DVLINT_IGNORE_RULES='dv-rule-annotations-001,dv-rule-empty-flow-001'
+        _tfdir="./terraform"
+        npm install -g @ping-identity/dvlint
+        npm install -g ${DVLINT_RULE_PACK}
+        find ${_tfdir} -name "*.json" | while read -r file; do
+          if jq -e -r '.companyId' "${file}" >/dev/null; then
+            dvlint -f "${file}" \
+              --rulePacks "${DVLINT_RULE_PACK}" \
+              --excludeRule "${DVLINT_EXCLUDE_RULES}" \
+              --ignoreRule "${DVLINT_IGNORE_RULES}" \
+              --includeRule "${DVLINT_INCLUDE_RULES}" \
+            || exit 1
+          fi
+        done
 
   validate:
     needs: [lint]
@@ -112,9 +113,11 @@ jobs:
         case $_branch in
           prod)
             _stateKey="${TF_VAR_tf_state_key_prefix}/prod/terraform.tfstate"
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
             ;;
-          qa)
+            qa)
             _stateKey="${TF_VAR_tf_state_key_prefix}/qa/terraform.tfstate"
+            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
             ;;
           *)
             echo "Local feature branch detected, skipping deployment"
