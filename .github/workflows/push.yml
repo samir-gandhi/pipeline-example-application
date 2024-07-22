@@ -113,16 +113,16 @@ jobs:
         case $_branch in
           prod)
             _stateKey="${TF_VAR_tf_state_key_prefix}/prod/terraform.tfstate"
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
+            export TF_VAR_pingone_target_environment_id='${PINGONE_TARGET_ENVIRONMENT_ID_PROD}
             ;;
             qa)
             _stateKey="${TF_VAR_tf_state_key_prefix}/qa/terraform.tfstate"
-            export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
+            export TF_VAR_pingone_target_environment_id='${PINGONE_TARGET_ENVIRONMENT_ID_QA}'
             
             ;;
           *)
             echo "Local feature branch detected, skipping deployment"
-            echo "environment id: ${PINGONE_TARGET_ENVIRONMENT_ID_QA"
+            echo "environment id: ${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
             exit 0
             ;;
         esac
