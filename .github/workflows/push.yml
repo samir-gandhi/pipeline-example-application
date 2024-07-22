@@ -47,8 +47,8 @@ jobs:
         npm install -g @ping-identity/dvlint
         npm install -g ${DVLINT_RULE_PACK}
         find ${_tfdir} -name "*.json" | while read -r file; do
-          if jq -e -r '.companyId' $$file >/dev/null; then
-            dvlint -f $$file \
+          if jq -e -r '.companyId' "${file}" >/dev/null; then
+            dvlint -f "${file}" \
               --rulePacks "${DVLINT_RULE_PACK}" \
               --excludeRule "${DVLINT_EXCLUDE_RULES}" \
               --ignoreRule "${DVLINT_IGNORE_RULES}" \
