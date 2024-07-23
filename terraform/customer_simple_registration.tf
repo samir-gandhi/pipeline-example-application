@@ -81,7 +81,7 @@ resource "docker_image" "registration" {
     context = "./sample-app"
   }
   triggers = {
-    dir_sha1 = sha1(join("", [for f in fileset(path.module, "./sample-app/**") : f != "sample-app/global.js" ? filesha1(f) : ""]))
+    dir_sha1   = sha1(join("", [for f in fileset(path.module, "./sample-app/**") : f != "sample-app/global.js" ? filesha1(f) : ""]))
     env_config = sha1(local_file.env_config.content)
   }
   force_remove = true
