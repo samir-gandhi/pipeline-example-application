@@ -69,6 +69,10 @@ output "env_config" {
   value = local_file.env_config.content
 }
 
+locals {
+  filenames = join("", [for f in fileset(path.module, "./sample-app/**") : f != "sample-app/global.js" ? f : ""])
+}
+
 # Define a Docker image resource
 resource "docker_image" "registration" {
   name = "simple-registration:latest"
@@ -76,13 +80,9 @@ resource "docker_image" "registration" {
     # Path to the directory containing Dockerfile and other necessary files
     context = "./sample-app"
   }
-  # triggers = {
-  #   dir_sha1 = sha1(join("", [for f in fileset(path.cwd, ".sample-app/**"): filesha1("${path.cwd}/${f}")]))
-  #   # dir_sha1 = sha1(join("", [for f in fileset(path.module, "../base"): filesha1(f)]))
-  #   # dir_sha1 = sha1("abc1234")
-  # }
   triggers = {
-    dir_sha1 = sha1(join("", [for f in fileset(path.module, "./sample-app/**") : filesha1(f)]))
+    dir_sha1   = sha1(join("", [for f in fileset(path.module, "./sample-app/**") : f != "sample-app/global.js" ? filesha1(f) : ""]))
+    env_config = sha1(local_file.env_config.content)
   }
   force_remove = true
   depends_on   = [local_file.env_config]
@@ -105,4 +105,8 @@ resource "docker_container" "registration" {
 
 output "dir_sha1" {
   value = docker_image.registration.triggers.dir_sha1
+}
+
+output "filenames" {
+  value = local.filenames
 }
