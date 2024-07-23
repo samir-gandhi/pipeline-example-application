@@ -85,6 +85,7 @@ jobs:
             _stateKey="${TF_VAR_tf_state_key_prefix}/dev/${_branch}/terraform.tfstate"
             ;;
         esac
+        echo "_stateKey: ${_stateKey}"
         terraform -chdir=${_tfdir} init \
           -backend-config="bucket=$TF_VAR_tf_state_bucket" \
           -backend-config="region=$TF_VAR_tf_state_region" \
@@ -115,19 +116,20 @@ jobs:
             _stateKey="${TF_VAR_tf_state_key_prefix}/prod/terraform.tfstate"
             export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_PROD}"
             ;;
-            qa)
+          qa)
             _stateKey="${TF_VAR_tf_state_key_prefix}/qa/terraform.tfstate"
             export TF_VAR_pingone_target_environment_id="${PINGONE_TARGET_ENVIRONMENT_ID_QA}"
-            
             ;;
           *)
             echo "Local feature branch detected, skipping deployment"
             exit 0
             ;;
         esac
+        echo "_stateKey: ${_stateKey}"
         terraform -chdir=${_tfdir} init \
           -backend-config="bucket=$TF_VAR_tf_state_bucket" \
           -backend-config="region=$TF_VAR_tf_state_region" \
           -backend-config="key=${_stateKey}"
+        echo "_stateKey: ${_stateKey}"
         echo "***Running terraform apply***"
         terraform -chdir=${_tfdir} apply --auto-approve
