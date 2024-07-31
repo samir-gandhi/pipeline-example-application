@@ -1,15 +1,14 @@
 {
-  "companyId": "b1de511b-f9af-4c90-93da-79c212d7ed14",
+  "companyId": "6a7e4eb9-bba0-434d-9a7b-c66f61f84ad7",
   "authTokenExpireIds": [],
   "connectorIds": [
     "pingOneSSOConnector",
     "httpConnector",
     "annotationConnector"
   ],
-  "createdDate": 1720713875595,
-  "currentVersion": 36,
+  "createdDate": 1721239821904,
+  "currentVersion": 8,
   "customerId": "ee728871d18a3b9b273c87192cee4a18",
-  "deployedDate": 1720713876640,
   "description": "Imported on Tue May 16 2023 19:35:07 GMT+0000 (Coordinated Universal Time)",
   "flowStatus": "enabled",
   "inputSchemaCompiled": {
@@ -41,7 +40,7 @@
   "isInputSchemaSaved": true,
   "isOutputSchemaSaved": false,
   "name": "PingOne DaVinci API Registration Example",
-  "publishedVersion": 36,
+  "publishedVersion": 7,
   "settings": {
     "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
     "intermediateLoadingScreenCSS": "",
@@ -50,9 +49,8 @@
     "scrubSensitiveInfo": true
   },
   "timeouts": "null",
-  "updatedDate": 1720713876684,
-  "flowId": "4eb25f1e9bad36b2e3f24a34466d98fb",
-  "versionId": 36,
+  "flowId": "dc7e5bf1707a294789b1c34653118f1a",
+  "versionId": 8,
   "graphData": {
     "elements": {
       "nodes": [
@@ -71,11 +69,11 @@
                   "email"
                 ]
               },
-              "userIdentifierForFindUser": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{global.parameters.email}}\",\n        \"tooltip\": \"{{global.parameters.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
-              },
               "nodeTitle": {
                 "value": "Check User Exists"
+              },
+              "userIdentifierForFindUser": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{global.parameters.email}}\",\n        \"tooltip\": \"{{global.parameters.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
               }
             },
             "status": "configured",
@@ -83,7 +81,7 @@
           },
           "position": {
             "x": 277,
-            "y": 322
+            "y": 459
           },
           "group": "nodes",
           "removed": false,
@@ -110,7 +108,7 @@
           },
           "position": {
             "x": 427,
-            "y": 322
+            "y": 459
           },
           "group": "nodes",
           "removed": false,
@@ -137,6 +135,9 @@
               "email": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{global.parameters.email}}\",\n        \"tooltip\": \"{{global.parameters.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
               },
+              "nodeTitle": {
+                "value": "Create New User"
+              },
               "passwordForCreateUser": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{global.parameters.password}}\",\n        \"tooltip\": \"{{global.parameters.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
               },
@@ -145,9 +146,6 @@
               },
               "username": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{global.parameters.email}}\",\n        \"tooltip\": \"{{global.parameters.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
-              },
-              "nodeTitle": {
-                "value": "Create New User"
               }
             },
             "status": "configured",
@@ -155,7 +153,7 @@
           },
           "position": {
             "x": 667,
-            "y": 472
+            "y": 609
           },
           "group": "nodes",
           "removed": false,
@@ -179,7 +177,7 @@
           },
           "position": {
             "x": 787,
-            "y": 472
+            "y": 609
           },
           "group": "nodes",
           "removed": false,
@@ -206,11 +204,11 @@
               "matchAttribute": {
                 "value": "email"
               },
-              "password": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{global.parameters.password}}\",\n        \"tooltip\": \"{{global.parameters.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
-              },
               "nodeTitle": {
                 "value": "Check Found User's Password"
+              },
+              "password": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"auth.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{global.parameters.password}}\",\n        \"tooltip\": \"{{global.parameters.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
               }
             },
             "status": "configured",
@@ -218,7 +216,7 @@
           },
           "position": {
             "x": 667,
-            "y": 322
+            "y": 459
           },
           "group": "nodes",
           "removed": false,
@@ -244,7 +242,7 @@
           },
           "position": {
             "x": 787,
-            "y": 322
+            "y": 459
           },
           "group": "nodes",
           "removed": false,
@@ -265,6 +263,9 @@
             "name": "Http",
             "nodeType": "CONNECTION",
             "properties": {
+              "backgroundColor": {
+                "value": "#9dc967ff"
+              },
               "claimsNameValuePairs": {
                 "value": [
                   {
@@ -283,9 +284,6 @@
                   }
                 ]
               },
-              "backgroundColor": {
-                "value": "#9dc967ff"
-              },
               "nodeTitle": {
                 "value": "New User Created"
               }
@@ -295,7 +293,7 @@
           },
           "position": {
             "x": 1050,
-            "y": 476
+            "y": 613
           },
           "group": "nodes",
           "removed": false,
@@ -339,7 +337,7 @@
           },
           "position": {
             "x": 1050,
-            "y": 596
+            "y": 733
           },
           "group": "nodes",
           "removed": false,
@@ -360,6 +358,9 @@
             "name": "Http",
             "nodeType": "CONNECTION",
             "properties": {
+              "backgroundColor": {
+                "value": "#9dc967ff"
+              },
               "claimsNameValuePairs": {
                 "value": [
                   {
@@ -373,9 +374,6 @@
               },
               "nodeTitle": {
                 "value": "Completed Login"
-              },
-              "backgroundColor": {
-                "value": "#9dc967ff"
               }
             },
             "status": "configured",
@@ -383,7 +381,7 @@
           },
           "position": {
             "x": 1050,
-            "y": 236
+            "y": 373
           },
           "group": "nodes",
           "removed": false,
@@ -427,7 +425,7 @@
           },
           "position": {
             "x": 1050,
-            "y": 356
+            "y": 493
           },
           "group": "nodes",
           "removed": false,
@@ -440,29 +438,29 @@
         },
         {
           "data": {
-            "id": "ar80vi71qv",
-            "nodeType": "ANNOTATION",
-            "name": "Annotation",
+            "capabilityName": "updateAnnotationProperties",
             "connectionId": "921bfae85c38ed45045e07be703d86b8",
             "connectorId": "annotationConnector",
-            "capabilityName": "updateAnnotationProperties",
-            "type": "action",
+            "id": "ar80vi71qv",
+            "name": "Annotation",
+            "nodeType": "ANNOTATION",
             "properties": {
-              "backgroundColor": {
-                "value": "#4462edff"
+              "annotation": {
+                "value": "Simple Registration and Login API"
               },
               "annotationTextColor": {
                 "value": "#ffffffff"
               },
-              "annotation": {
-                "value": "Simple Registration and Login"
+              "backgroundColor": {
+                "value": "#4462edff"
               }
             },
-            "status": "configured"
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 633,
-            "y": 77
+            "y": 214
           },
           "group": "nodes",
           "removed": false,
@@ -475,38 +473,38 @@
         },
         {
           "data": {
-            "id": "7zmbxl7r8i",
-            "nodeType": "ANNOTATION",
-            "name": "Annotation",
+            "capabilityName": "updateAnnotationProperties",
             "connectionId": "921bfae85c38ed45045e07be703d86b8",
             "connectorId": "annotationConnector",
-            "capabilityName": "updateAnnotationProperties",
-            "type": "action",
+            "id": "7zmbxl7r8i",
+            "name": "Annotation",
+            "nodeType": "ANNOTATION",
             "properties": {
-              "backgroundColor": {
-                "value": "#B5DFFF"
+              "annotation": {
+                "value": "Check if user exists, and automatically create user if they are not found"
               },
               "annotationTextColor": {
                 "value": "#000000"
               },
-              "annotation": {
-                "value": "Check if user exists, and automatically create user if they are not found"
+              "backgroundColor": {
+                "value": "#B5DFFF"
               },
-              "width": {
-                "value": 200
+              "fontSize": {
+                "value": 16
               },
               "height": {
                 "value": 100
               },
-              "fontSize": {
-                "value": 16
+              "width": {
+                "value": 200
               }
             },
-            "status": "configured"
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 330,
-            "y": 150
+            "y": 287
           },
           "group": "nodes",
           "removed": false,
@@ -728,7 +726,7 @@
     }
   ],
   "flowColor": "#CACED3",
-  "savedDate": 1720713875463,
+  "savedDate": 1721239821830,
   "variables": [],
   "connections": []
 }
