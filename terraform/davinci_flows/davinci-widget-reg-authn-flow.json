@@ -1,28 +1,29 @@
 {
-  "companyId": "b6027f63-aaca-4b65-ac14-6ed7f0a04b10",
+  "companyId": "c6524032-213e-4a51-979f-57f97add6769",
   "authTokenExpireIds": [],
   "connectorIds": [
     "httpConnector",
-    "pingOneSSOConnector"
+    "pingOneSSOConnector",
+    "annotationConnector"
   ],
-  "createdDate": 1684265758250,
-  "currentVersion": 2,
-  "customerId": "0b70e08c92457a154f4e6ae605beed87",
-  "deployedDate": 1684265771669,
+  "createdDate": 1722454118491,
+  "currentVersion": 19,
+  "customerId": "bb5fef4347dc9293873ae12ee9e73f1c",
   "description": "Imported on Tue May 16 2023 19:35:07 GMT+0000 (Coordinated Universal Time)",
   "flowStatus": "enabled",
+  "isOutputSchemaSaved": false,
   "name": "PingOne DaVinci Registration Example",
-  "publishedVersion": 2,
+  "publishedVersion": 17,
   "settings": {
     "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
     "intermediateLoadingScreenCSS": "",
     "intermediateLoadingScreenHTML": "",
     "logLevel": 2
   },
+  "timeouts": "null",
   "trigger": {},
-  "updatedDate": 1684265771669,
-  "flowId": "407774c0789cd5dabaada8655c5753be",
-  "versionId": 2,
+  "flowId": "38e6d5e3999b08cc621ab17f5cb8d2c5",
+  "versionId": 19,
   "graphData": {
     "elements": {
       "nodes": [
@@ -72,6 +73,9 @@
                     ]
                   }
                 ]
+              },
+              "nodeTitle": {
+                "value": "Get User"
               }
             }
           },
@@ -107,6 +111,9 @@
               },
               "userIdentifierForFindUser": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"tooltip\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              },
+              "nodeTitle": {
+                "value": "Check User"
               }
             }
           },
@@ -199,7 +206,7 @@
                 ]
               },
               "nodeTitle": {
-                "value": "Enter Password Form"
+                "value": "Get Password"
               },
               "validationRules": {
                 "value": [
@@ -271,7 +278,7 @@
                 ]
               },
               "nodeTitle": {
-                "value": "Register New Email Form"
+                "value": "Registration Window"
               },
               "validationRules": {
                 "value": [
@@ -357,6 +364,9 @@
               },
               "username": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{local.0di26c5iy7.payload.output.email}}\",\n        \"tooltip\": \"{{local.0di26c5iy7.payload.output.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              },
+              "nodeTitle": {
+                "value": "Submit Registration"
               }
             }
           },
@@ -419,6 +429,9 @@
               },
               "nodeTitle": {
                 "value": "Successfully Completed Login"
+              },
+              "backgroundColor": {
+                "value": "#9dc967ff"
               }
             }
           },
@@ -475,6 +488,9 @@
               },
               "password": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{local.eg2kadjdo1.payload.output.password}}\",\n        \"tooltip\": \"{{local.eg2kadjdo1.payload.output.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              },
+              "nodeTitle": {
+                "value": "Check Password"
               }
             }
           },
@@ -541,13 +557,121 @@
                 "value": "(() => {\n    document.getElementById('login').addEventListener('click', () => window.location.reload());\n})();"
               },
               "nodeTitle": {
-                "value": "Successfully Completed Registration"
+                "value": "Successfully Completed Reg"
+              },
+              "backgroundColor": {
+                "value": "#9dc967ff"
               }
             }
           },
           "position": {
             "x": 1417,
             "y": 386
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "kazvm49gu7",
+            "nodeType": "ANNOTATION",
+            "name": "Annotation",
+            "connectionId": "921bfae85c38ed45045e07be703d86b8",
+            "connectorId": "annotationConnector",
+            "capabilityName": "updateAnnotationProperties",
+            "type": "action",
+            "properties": {
+              "backgroundColor": {
+                "value": "#4462edff"
+              },
+              "annotationTextColor": {
+                "value": "#ffffffff"
+              },
+              "annotation": {
+                "value": "PingOne DaVinci Registration Example"
+              }
+            },
+            "status": "configured"
+          },
+          "position": {
+            "x": 810,
+            "y": 90
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "rw2h2woqbe",
+            "nodeType": "ANNOTATION",
+            "name": "Annotation",
+            "connectionId": "921bfae85c38ed45045e07be703d86b8",
+            "connectorId": "annotationConnector",
+            "capabilityName": "updateAnnotationProperties",
+            "type": "action",
+            "properties": {
+              "backgroundColor": {
+                "value": "#B5DFFF"
+              },
+              "annotationTextColor": {
+                "value": "#000000"
+              },
+              "annotation": {
+                "value": "Welcome User"
+              }
+            },
+            "status": "configured"
+          },
+          "position": {
+            "x": 270,
+            "y": 330
+          },
+          "group": "nodes",
+          "removed": false,
+          "selected": false,
+          "selectable": true,
+          "locked": false,
+          "grabbable": true,
+          "pannable": false,
+          "classes": ""
+        },
+        {
+          "data": {
+            "id": "hq25k8iek7",
+            "nodeType": "ANNOTATION",
+            "name": "Annotation",
+            "connectionId": "921bfae85c38ed45045e07be703d86b8",
+            "connectorId": "annotationConnector",
+            "capabilityName": "updateAnnotationProperties",
+            "type": "action",
+            "properties": {
+              "backgroundColor": {
+                "value": "#B5DFFF"
+              },
+              "annotationTextColor": {
+                "value": "#000000"
+              },
+              "annotation": {
+                "value": "Check password or create user"
+              }
+            },
+            "status": "configured"
+          },
+          "position": {
+            "x": 870,
+            "y": 480
           },
           "group": "nodes",
           "removed": false,
@@ -827,7 +951,7 @@
     }
   },
   "flowColor": "#AFD5FF",
-  "savedDate": 1684265758118,
+  "savedDate": 1722454118364,
   "variables": [],
   "connections": []
 }
