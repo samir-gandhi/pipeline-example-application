@@ -6,14 +6,24 @@
     "pingOneSSOConnector",
     "annotationConnector"
   ],
-  "createdDate": 1722454118491,
-  "currentVersion": 19,
-  "customerId": "bb5fef4347dc9293873ae12ee9e73f1c",
+  "createdDate": 1722458930976,
+  "currentVersion": 4,
+  "customerId": "ee728871d18a3b9b273c87192cee4a18",
+  "deployedDate": 1722458935311,
   "description": "Imported on Tue May 16 2023 19:35:07 GMT+0000 (Coordinated Universal Time)",
   "flowStatus": "enabled",
+  "inputSchemaCompiled": {
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false,
+      "required": []
+    }
+  },
+  "isInputSchemaSaved": false,
   "isOutputSchemaSaved": false,
   "name": "PingOne DaVinci Registration Example",
-  "publishedVersion": 17,
+  "publishedVersion": 4,
   "settings": {
     "csp": "worker-src 'self' blob:; script-src 'self' https://cdn.jsdelivr.net https://code.jquery.com https://devsdk.singularkey.com http://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval';",
     "intermediateLoadingScreenCSS": "",
@@ -21,23 +31,21 @@
     "logLevel": 2
   },
   "timeouts": "null",
-  "trigger": {},
-  "flowId": "38e6d5e3999b08cc621ab17f5cb8d2c5",
-  "versionId": 19,
+  "updatedDate": 1722458935391,
+  "flowId": "6572c12c874286ec27eccc1626d37883",
+  "versionId": 4,
   "graphData": {
     "elements": {
       "nodes": [
         {
           "data": {
-            "id": "cfpq1xg2dc",
-            "nodeType": "CONNECTION",
+            "capabilityName": "customHTMLTemplate",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "cfpq1xg2dc",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "customHTMLTemplate",
-            "type": "trigger",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
               "customHTML": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"<form id=\\\"emailForm\\\">\\n    <input type=\\\"text\\\" id=\\\"email\\\" name=\\\"email\\\" placeholder=\\\"Email Address\\\" />\\n    <div data-skcomponent=\\\"skerrormessage\\\" class=\\\"input-error-msg text-danger\\\" data-skerrorid=\\\"email\\\"></div>\\n    <button class=\\\"btn\\\" data-skcomponent=\\\"skbutton\\\" data-skbuttontype=\\\"form-submit\\\" data-skform=\\\"emailForm\\\" data-skbuttonvalue=\\\"submit\\\">Submit</button>\\n<form>\"\n      }\n    ]\n  }\n]"
@@ -61,6 +69,9 @@
                   }
                 ]
               },
+              "nodeTitle": {
+                "value": "Get User"
+              },
               "validationRules": {
                 "value": [
                   {
@@ -73,15 +84,14 @@
                     ]
                   }
                 ]
-              },
-              "nodeTitle": {
-                "value": "Get User"
               }
-            }
+            },
+            "status": "configured",
+            "type": "trigger"
           },
           "position": {
             "x": 277,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -94,32 +104,32 @@
         },
         {
           "data": {
-            "id": "m4sfmek769",
-            "nodeType": "CONNECTION",
+            "capabilityName": "userLookup",
             "connectionId": "94141bf2f1b9b59a5f5365ff135e02bb",
             "connectorId": "pingOneSSOConnector",
-            "name": "PingOne",
+            "id": "m4sfmek769",
             "label": "PingOne",
-            "status": "configured",
-            "capabilityName": "userLookup",
-            "type": "action",
+            "name": "PingOne",
+            "nodeType": "CONNECTION",
             "properties": {
               "matchAttributes": {
                 "value": [
                   "email"
                 ]
               },
-              "userIdentifierForFindUser": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"tooltip\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
-              },
               "nodeTitle": {
                 "value": "Check User"
+              },
+              "userIdentifierForFindUser": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"tooltip\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 547,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -133,12 +143,11 @@
         {
           "data": {
             "id": "fyg4fdn344",
-            "nodeType": "EVAL",
-            "properties": {}
+            "nodeType": "EVAL"
           },
           "position": {
             "x": 397,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -152,8 +161,8 @@
         {
           "data": {
             "id": "yqi3iaujxx",
-            "nodeType": "EVAL",
             "label": "Evaluator",
+            "nodeType": "EVAL",
             "properties": {
               "0di26c5iy7": {
                 "value": "anyTriggersFalse"
@@ -162,7 +171,7 @@
           },
           "position": {
             "x": 667,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -175,15 +184,13 @@
         },
         {
           "data": {
-            "id": "eg2kadjdo1",
-            "nodeType": "CONNECTION",
+            "capabilityName": "customHTMLTemplate",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "eg2kadjdo1",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "customHTMLTemplate",
-            "type": "trigger",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
               "customHTML": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"<form id=\\\"loginForm\\\">\"\n      }\n    ]\n  },\n  {\n    \"children\": [\n      {\n        \"text\": \"\\t<div data-skcomponent=\\\"skerror\\\" style=\\\"color: red; padding-bottom: 1rem; text-align: center;\\\" class=\\\"feedback feedback--error sk-alert sk-alert-danger has-text-danger has-background-danger-light text-danger text-center pb-3\\\" data-id=\\\"feedback\\\" data-skvisibility=\\\"\\\"></div>\\n    <input type=\\\"password\\\" id=\\\"password\\\" placeholder=\\\"password\\\" />\\n    <button class=\\\"btn\\\" data-skcomponent=\\\"skbutton\\\" data-skbuttontype=\\\"form-submit\\\" data-skform=\\\"loginForm\\\" data-skbuttonvalue=\\\"submit\\\">Login</button>\\n</form>\"\n      }\n    ]\n  }\n]"
@@ -222,11 +229,13 @@
                   }
                 ]
               }
-            }
+            },
+            "status": "configured",
+            "type": "trigger"
           },
           "position": {
             "x": 847,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -239,15 +248,13 @@
         },
         {
           "data": {
-            "id": "0di26c5iy7",
-            "nodeType": "CONNECTION",
+            "capabilityName": "customHTMLTemplate",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "0di26c5iy7",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "customHTMLTemplate",
-            "type": "trigger",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
               "customHTML": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"<form id=\\\"registerForm\\\">\\n    <p>We did not locate that account. Sign up now!</p>\\n    <input type=\\\"text\\\" id=\\\"email\\\" placeholder=\\\"Email address\\\" />\\n    <input type=\\\"password\\\" id=\\\"password\\\" placeholder=\\\"password\\\" />\\n    <button class=\\\"btn\\\" data-skcomponent=\\\"skbutton\\\" data-skbuttontype=\\\"form-submit\\\" data-skform=\\\"registerForm\\\" data-skbuttonvalue=\\\"submit\\\">Register</button>\\n</form>\"\n      }\n    ]\n  }\n]"
@@ -303,11 +310,13 @@
                   }
                 ]
               }
-            }
+            },
+            "status": "configured",
+            "type": "trigger"
           },
           "position": {
             "x": 847,
-            "y": 386
+            "y": 510
           },
           "group": "nodes",
           "removed": false,
@@ -321,13 +330,12 @@
         {
           "data": {
             "id": "auhsovpoa8",
-            "nodeType": "EVAL",
             "label": "Evaluator",
-            "properties": {}
+            "nodeType": "EVAL"
           },
           "position": {
             "x": 967,
-            "y": 386
+            "y": 510
           },
           "group": "nodes",
           "removed": false,
@@ -340,21 +348,22 @@
         },
         {
           "data": {
-            "id": "6i7lwwrw94",
-            "nodeType": "CONNECTION",
+            "capabilityName": "createUser",
             "connectionId": "94141bf2f1b9b59a5f5365ff135e02bb",
             "connectorId": "pingOneSSOConnector",
-            "name": "PingOne",
+            "id": "6i7lwwrw94",
             "label": "PingOne",
-            "status": "configured",
-            "capabilityName": "createUser",
-            "type": "action",
+            "name": "PingOne",
+            "nodeType": "CONNECTION",
             "properties": {
               "additionalUserProperties": {
                 "value": []
               },
               "email": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{local.0di26c5iy7.payload.output.email}}\",\n        \"tooltip\": \"{{local.0di26c5iy7.payload.output.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
+              },
+              "nodeTitle": {
+                "value": "Submit Registration"
               },
               "passwordForCreateUser": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{local.0di26c5iy7.payload.output.password}}\",\n        \"tooltip\": \"{{local.0di26c5iy7.payload.output.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
@@ -364,15 +373,14 @@
               },
               "username": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{local.0di26c5iy7.payload.output.email}}\",\n        \"tooltip\": \"{{local.0di26c5iy7.payload.output.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
-              },
-              "nodeTitle": {
-                "value": "Submit Registration"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 1117,
-            "y": 386
+            "y": 510
           },
           "group": "nodes",
           "removed": false,
@@ -386,13 +394,12 @@
         {
           "data": {
             "id": "hcmfduc8d9",
-            "nodeType": "EVAL",
             "label": "Evaluator",
-            "properties": {}
+            "nodeType": "EVAL"
           },
           "position": {
             "x": 1237,
-            "y": 386
+            "y": 510
           },
           "group": "nodes",
           "removed": false,
@@ -405,16 +412,17 @@
         },
         {
           "data": {
-            "id": "64the1zf75",
-            "nodeType": "CONNECTION",
+            "capabilityName": "createSuccessResponse",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "64the1zf75",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "createSuccessResponse",
-            "type": "action",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
+              "backgroundColor": {
+                "value": "#9dc967ff"
+              },
               "claimsNameValuePairs": {
                 "value": [
                   {
@@ -429,15 +437,14 @@
               },
               "nodeTitle": {
                 "value": "Successfully Completed Login"
-              },
-              "backgroundColor": {
-                "value": "#9dc967ff"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 1417,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -451,13 +458,12 @@
         {
           "data": {
             "id": "tx0qrifdc8",
-            "nodeType": "EVAL",
             "label": "Evaluator",
-            "properties": {}
+            "nodeType": "EVAL"
           },
           "position": {
             "x": 966.5,
-            "y": 236.75
+            "y": 360.75
           },
           "group": "nodes",
           "removed": false,
@@ -470,15 +476,13 @@
         },
         {
           "data": {
-            "id": "p53gq7n410",
-            "nodeType": "CONNECTION",
+            "capabilityName": "checkPassword",
             "connectionId": "94141bf2f1b9b59a5f5365ff135e02bb",
             "connectorId": "pingOneSSOConnector",
-            "name": "PingOne",
+            "id": "p53gq7n410",
             "label": "PingOne",
-            "status": "configured",
-            "capabilityName": "checkPassword",
-            "type": "action",
+            "name": "PingOne",
+            "nodeType": "CONNECTION",
             "properties": {
               "identifier": {
                 "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"email\",\n        \"data\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"tooltip\": \"{{local.cfpq1xg2dc.payload.output.email}}\",\n        \"children\": [\n          {\n            \"text\": \"email\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
@@ -486,17 +490,19 @@
               "matchAttribute": {
                 "value": "email"
               },
-              "password": {
-                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{local.eg2kadjdo1.payload.output.password}}\",\n        \"tooltip\": \"{{local.eg2kadjdo1.payload.output.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
-              },
               "nodeTitle": {
                 "value": "Check Password"
+              },
+              "password": {
+                "value": "[\n  {\n    \"children\": [\n      {\n        \"text\": \"\"\n      },\n      {\n        \"text\": \"\"\n      },\n      {\n        \"type\": \"link\",\n        \"src\": \"http.svg\",\n        \"url\": \"password\",\n        \"data\": \"{{local.eg2kadjdo1.payload.output.password}}\",\n        \"tooltip\": \"{{local.eg2kadjdo1.payload.output.password}}\",\n        \"children\": [\n          {\n            \"text\": \"password\"\n          }\n        ]\n      },\n      {\n        \"text\": \"\"\n      }\n    ]\n  }\n]"
               }
-            }
+            },
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 1117,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -510,12 +516,11 @@
         {
           "data": {
             "id": "8uo3defwup",
-            "nodeType": "EVAL",
-            "properties": {}
+            "nodeType": "EVAL"
           },
           "position": {
             "x": 1237,
-            "y": 236
+            "y": 360
           },
           "group": "nodes",
           "removed": false,
@@ -528,16 +533,17 @@
         },
         {
           "data": {
-            "id": "7imwg8c7j4",
-            "nodeType": "CONNECTION",
+            "capabilityName": "customHTMLTemplate",
             "connectionId": "867ed4363b2bc21c860085ad2baa817d",
             "connectorId": "httpConnector",
-            "name": "Http",
+            "id": "7imwg8c7j4",
             "label": "Http",
-            "status": "configured",
-            "capabilityName": "customHTMLTemplate",
-            "type": "trigger",
+            "name": "Http",
+            "nodeType": "CONNECTION",
             "properties": {
+              "backgroundColor": {
+                "value": "#9dc967ff"
+              },
               "claimsNameValuePairs": {
                 "value": [
                   {
@@ -558,15 +564,14 @@
               },
               "nodeTitle": {
                 "value": "Successfully Completed Reg"
-              },
-              "backgroundColor": {
-                "value": "#9dc967ff"
               }
-            }
+            },
+            "status": "configured",
+            "type": "trigger"
           },
           "position": {
             "x": 1417,
-            "y": 386
+            "y": 510
           },
           "group": "nodes",
           "removed": false,
@@ -579,29 +584,29 @@
         },
         {
           "data": {
-            "id": "kazvm49gu7",
-            "nodeType": "ANNOTATION",
-            "name": "Annotation",
+            "capabilityName": "updateAnnotationProperties",
             "connectionId": "921bfae85c38ed45045e07be703d86b8",
             "connectorId": "annotationConnector",
-            "capabilityName": "updateAnnotationProperties",
-            "type": "action",
+            "id": "kazvm49gu7",
+            "name": "Annotation",
+            "nodeType": "ANNOTATION",
             "properties": {
-              "backgroundColor": {
-                "value": "#4462edff"
+              "annotation": {
+                "value": "PingOne DaVinci Registration Example"
               },
               "annotationTextColor": {
                 "value": "#ffffffff"
               },
-              "annotation": {
-                "value": "PingOne DaVinci Registration Example"
+              "backgroundColor": {
+                "value": "#4462edff"
               }
             },
-            "status": "configured"
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 810,
-            "y": 90
+            "y": 214
           },
           "group": "nodes",
           "removed": false,
@@ -614,29 +619,29 @@
         },
         {
           "data": {
-            "id": "rw2h2woqbe",
-            "nodeType": "ANNOTATION",
-            "name": "Annotation",
+            "capabilityName": "updateAnnotationProperties",
             "connectionId": "921bfae85c38ed45045e07be703d86b8",
             "connectorId": "annotationConnector",
-            "capabilityName": "updateAnnotationProperties",
-            "type": "action",
+            "id": "rw2h2woqbe",
+            "name": "Annotation",
+            "nodeType": "ANNOTATION",
             "properties": {
-              "backgroundColor": {
-                "value": "#B5DFFF"
+              "annotation": {
+                "value": "Welcome User"
               },
               "annotationTextColor": {
                 "value": "#000000"
               },
-              "annotation": {
-                "value": "Welcome User"
+              "backgroundColor": {
+                "value": "#B5DFFF"
               }
             },
-            "status": "configured"
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 270,
-            "y": 330
+            "y": 454
           },
           "group": "nodes",
           "removed": false,
@@ -649,29 +654,29 @@
         },
         {
           "data": {
-            "id": "hq25k8iek7",
-            "nodeType": "ANNOTATION",
-            "name": "Annotation",
+            "capabilityName": "updateAnnotationProperties",
             "connectionId": "921bfae85c38ed45045e07be703d86b8",
             "connectorId": "annotationConnector",
-            "capabilityName": "updateAnnotationProperties",
-            "type": "action",
+            "id": "hq25k8iek7",
+            "name": "Annotation",
+            "nodeType": "ANNOTATION",
             "properties": {
-              "backgroundColor": {
-                "value": "#B5DFFF"
+              "annotation": {
+                "value": "Check password or create user"
               },
               "annotationTextColor": {
                 "value": "#000000"
               },
-              "annotation": {
-                "value": "Check password or create user"
+              "backgroundColor": {
+                "value": "#B5DFFF"
               }
             },
-            "status": "configured"
+            "status": "configured",
+            "type": "action"
           },
           "position": {
             "x": 870,
-            "y": 480
+            "y": 604
           },
           "group": "nodes",
           "removed": false,
@@ -950,8 +955,9 @@
       "name": "null"
     }
   },
+  "inputSchema": [],
   "flowColor": "#AFD5FF",
-  "savedDate": 1722454118364,
+  "savedDate": 1722458930842,
   "variables": [],
   "connections": []
 }

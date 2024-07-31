@@ -33,6 +33,7 @@ HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8080 || 
 
 # Expose port 80 to allow outside access to our webpage
 EXPOSE 8080
+EXPOSE 8443
 
 # Run nginx non-root
 USER nginx
