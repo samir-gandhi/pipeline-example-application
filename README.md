@@ -1,8 +1,8 @@
-# Ping Application Example Pipeline 
+# Ping Application Example Pipeline
 
 This repository is intended to present a simplified reference demonstrating how a management and deployment pipeline might work for applications that depend on services managed by a central IAM platform team. As such, it is a complement to the [infrastructure](https://github.com/pingidentity/pipeline-example-infrastructure) and [platform](https://github.com/pingidentity/pipeline-example-platform) example pipeline repositories.
 
-> NOTE: This repository directly depends on a completed set-up of the [pipeline-example-application](https://github.com/pingidentity/pipeline-example-platform?tab=readme-ov-file#deploy-prod-and-qa). Please ensure you have completed the steps for confguration leading up to and including the previous link.
+> NOTE: This repository directly depends on a completed setup of the [pipeline-example-platform](https://github.com/pingidentity/pipeline-example-platform?tab=readme-ov-file#deploy-prod-and-qa). Please ensure you have completed the steps for configuration leading up to and including the previous link.
 
 **Infrastructure** - Components dealing with deploying software onto self-managed Kubernetes infrastructure and any configuration that must be delivered directly via the filesystem.
 
@@ -26,7 +26,7 @@ In this repository, the processes and features shown in a GitOps process of deve
 
 To be successful in recreating the use cases supported by this pipeline, there are initial steps that should be completed prior to configuring this repository:
 
-- Completion of all pre-requisites and confiuration steps leading to [Feature Development](https://github.com/pingidentity/pipeline-example-platform?tab=readme-ov-file#feature-development) in the example-pipeline-platform.
+- Completion of all pre-requisites and confiuration steps leading to [Feature Development](https://github.com/pingidentity/pipeline-example-platform?tab=readme-ov-file#feature-development) from the example-pipeline-platform repository.
 - [Docker](https://docs.docker.com/engine/install/) - used to deploy a local sample application.
 
 <!-- TODO - Review Required Permissions-->
@@ -46,7 +46,7 @@ The use cases in this repository follow a flow similar to this diagram:
 
 ## Before You Start
 
-There are a few items to configure before you can use this repository effectively.
+There are a few items to configure before you can successfully use this repository.
 
 ### Github Actions Secrets
 
@@ -58,7 +58,7 @@ cp secretstemplate localsecrets
 
 > Note, `secretstemplate` is intended to be a template file, `localsecrets` is a file that contains credentials but is part of .gitignore and should never be committed into the repository. **`secretstemplate`** is committed to the repository, do not edit it directly!
 
-Fill in `localsecrets` accordingly. The configurations in this repository rely on environments created from [pipeline-example-platform](https://github.com/pingidentity/pipeline-example-platform). For the `PINGONE_TARGET_ENVIRONMENT_ID_PROD` and `PINGONE_TARGET_ENVIRONMENT_ID_QA` variables, get the Environment ID for the `prod` and `qa` environments. The Environment ID can be found from the output at the end of a terraform apply (whether from the Github Actions pipeline, or local) or from the PingOne console directly.
+Fill in `localsecrets` accordingly. The configurations in this repository rely on environments created from [pipeline-example-platform](https://github.com/pingidentity/pipeline-example-platform). For the `PINGONE_TARGET_ENVIRONMENT_ID_PROD` and `PINGONE_TARGET_ENVIRONMENT_ID_QA` variables, get the Environment ID for the `prod` and `qa` environments. The Environment ID can be found from the output at the end of a terraform apply (whether from the Github Actions pipeline, or local) or directly from the PingOne console.
 
 If you have not created a static development environment in your PingOne account, you can do so in the *pipeline-example-platform* local repository by running the following command to instantiate one matching prod and qa:
 
@@ -81,13 +81,13 @@ gh secret set --app actions TERRAFORM_ENV_BASE64 --body $_secrets
 unset _secrets
 ```
 
-> Note - On a Mac, if you have installed the **base64** application using brew, there will be a file content failure in the pipeline stemming from the first command shown above.  Use the default version of base64 by specifying the path explicitly: `_secrets="$(/usr/bin/base64 -i localsecrets)"`
+> Note - On the Apple Mac platform, if you have installed the **base64** application using brew, there will be a file content failure in the pipeline stemming from the first command shown above.  Use the default version of base64 by specifying the path explicitly: `_secrets="$(/usr/bin/base64 -i localsecrets)"`
 
 ### Deploy Prod and QA
 
 The final step before creating new features is to deploy application configuration for `prod` and `qa`.
 
-Under the **Actions** section in Github, locate the failed **Initial commit** workflow run from the creation of the repository.  Click "Re-run jobs" and choose "Re-run all jobs". If your secrets are configured correctly, this should result in the successful deployment of new configuration to the "prod" environment in your PingOne account.
+Under the **Actions** section in Github, locate the failed **Initial commit** workflow run from the creation of the repository.  Click "Re-run jobs" and choose "Re-run all jobs". If your secrets are configured correctly, the new run should result in the successful deployment of the new configuration to the "prod" environment in your PingOne account.
 
 ![re-run all jobs](./img/rerunalljobs.png "Re-run All Jobs")
 
@@ -98,15 +98,15 @@ To deploy the `qa` environment, simply create and push a new branch from prod wi
 ```bash
 git checkout prod
 git pull origin prod
-git checkout -b qa
+git checkout -b qagit 
 git push origin qa
 ```
 
 ![QA deployed](./img/qadeployed.png "QA Deployed")
 
 ## Feature Development
-Now that the repository and pipeline are configured, the standard git flow can be followed. To experience the developer's perspective, follow steps similar to those documented within the [pipeline-example-platform "Feature Development"](https://github.com/pingidentity/pipeline-example-platform/tree/prod?tab=readme-ov-file#feature-development) section. A notable difference in this repository is that there will be no deployment of configuration to feature environments from the pipeline. Feature/Development envirionment configuration deployment will occur from local machines only. A "shared" application development environment will be used to connect to for deploying the applications managed in this repository.
 
+Now that the repository and pipeline are configured, the standard git flow can be followed. To experience the developer's perspective, follow steps similar to those documented within the [pipeline-example-platform "Feature Development"](https://github.com/pingidentity/pipeline-example-platform/tree/prod?tab=readme-ov-file#feature-development) section. A notable difference in this repository is that there will be no deployment of configuration to feature environments from the pipeline. Feature/Development environment configuration deployment will occur from local machines only. A "shared" application development environment will be used to connect to for deploying the applications managed in this repository.
 
 To experience the developer's perspective, a demo walk through of the steps follows. The demo will simulated the use case of updating the client application and promoting the change into production.
 
@@ -118,21 +118,78 @@ To experience the developer's perspective, a demo walk through of the steps foll
 
 ![Create a branch](./img/createabranch.png "Create a branch")
 
-3. The end of the Github Actions deploy step will output the environment id, capture it for use in this repository.
+3. After the Github Actions pipeline completes, log in to your PingOne account with a user that has appropriate roles. This user may be the organization administrator with which you signed up for the trial or a development user if you have configured roles for it. The corresponding dev environment should now have additional application and DaVinci configuration.
 
+4. Build the requested configuration by navigating into the environment: **Applications** > **Applications** > Click the blue **+** and provide the information:
+
+- Application Name: my-awesome-oidc-web-app
+- Application Type: OIDC Web App
+
+5. Click **Save** and toggle the **Enable** switch. On the screen where the application is enabled, the **Environment ID** and application **Client ID** will also be shown. Capture these for use in the import process.
+
+6. Typically the next step would be to provide the application details to the developer team for testing. This process is skipped in here for brevity.
+
+7. After the application creation is "tested" manually, the new configuration must be added to the Terraform configuration. This addition will happen in a few steps, starting with creating and testing the configuration in the `./terraform/dev` folder.
+
+  a. Terraform provides a [tool to help generate configuration](https://developer.hashicorp.com/terraform/language/import) for resources built directly in the environment. To leverage this tool as a developer, an import block will be added to `./terraform/dev/imports.tf`. Create this file now, adding lines similar to the following:
+
+```hcl
+import {
+  to = pingone_application.my_awesome_oidc_web_app
+  id = "environment_id/client_id"
+}
 ```
-Apply complete! Resources: 15 added, 0 changed, 0 destroyed.
 
-Outputs:
+> Note: This file is not intended to be committed to Github and is included in **.gitignore**. To understand the values to be provided in the id attribute of any resource, the developer should refer to that resources documentation on registry.terraform.io.
 
-pingone_environment_id = "b1de511a-f8af-4c91-93da-79c212d7ed14"
+  b. Run the generate command to generate output. In this repository, the generate command is wrapped in the deploy script:
+
+```bash
+./scripts/local_feature_deploy.sh --generate
 ```
 
-4. In this **pipeline-example-application** repository, create a GitHub Issue for a new feature request via the UI. GitHub Issue Templates help ensure the requestor provides appropriate information on the issue.
+> WARNING! Be sure you have updated the **local_feature_deploy.sh** script to include the correct values for the **bucket_name** and **region** variables.
 
-5. Click "Create a branch" and choose "Checkout Locally" for GitHub to create a development branch and PingOne environment on your behalf. `cd` into the local root of this repository and enter the steps presented from "Checkout Locally". 
+This command will create a file with the generated output at `./terraform/dev/generated-platform.tf`
 
-6. Run the deploy command to initialize the application
+However, the command line should have also returned an error similar to the following:
+
+```log
+Planning failed. Terraform encountered an error while generating this plan.
+
+╷
+│ Error: expected refresh_token_duration to be in the range (60 - 2147483647), got 0
+│ 
+│   with pingone_application.my_awesome_oidc_web_app,
+│   on generated-platform.tf line 22:
+│   (source code not available)
+│ 
+╵
+╷
+│ Error: expected refresh_token_rolling_duration to be in the range (60 - 2147483647), got 0
+│ 
+│   with pingone_application.my_awesome_oidc_web_app,
+│   on generated-platform.tf line 23:
+│   (source code not available)
+```
+
+Terraform's import feature may frequently return errors due to complications with resource schemas. When this occurs the developer is typically able to correct the issue by reading the error.
+
+  c. To resolve the error, two attributes in the generated configuration must be updated:
+
+```yaml
+    refresh_token_duration                             = 0
+    refresh_token_rolling_duration                     = 0
+```
+
+becomes
+
+```yaml
+    refresh_token_duration                             = 60
+    refresh_token_rolling_duration                     = 60
+```
+
+  d. After correcting the generated configuration, run the script again to import the resource into terraform's managed state:
 
 ```bash
 ./scripts/local_feature_deploy.sh
