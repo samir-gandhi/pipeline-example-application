@@ -4,7 +4,7 @@
 # {@link https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/resources/flow}
 
 resource "davinci_flow" "registration_flow" {
-  flow_json = file("./davinci_flows/davinci-api-reg-authn-flow.json")
+  flow_json = file("./davinci_flows/davinci-widget-reg-authn-flow.json")
 
   environment_id = var.pingone_target_environment_id
 
@@ -23,7 +23,6 @@ resource "davinci_flow" "registration_flow" {
     id                           = element([for s in data.davinci_connections.read_all.connections : s.id if s.name == "Annotation"], 0)
     name                         = element([for s in data.davinci_connections.read_all.connections : s.name if s.name == "Annotation"], 0)
     replace_import_connection_id = "921bfae85c38ed45045e07be703d86b8"
-
   }
 }
 
@@ -33,7 +32,7 @@ resource "davinci_flow" "registration_flow" {
 # {@link https://registry.terraform.io/providers/pingidentity/davinci/latest/docs/resources/application}
 
 resource "davinci_application" "registration_flow_app" {
-  name           = "DaVinci API Registration Sample Application"
+  name           = "PingOne DaVinci Registration Example"
   environment_id = var.pingone_target_environment_id
   depends_on     = [data.davinci_connections.read_all]
   oauth {
@@ -51,7 +50,7 @@ resource "davinci_application" "registration_flow_app" {
 resource "davinci_application_flow_policy" "registration_flow_app_policy" {
   environment_id = var.pingone_target_environment_id
   application_id = davinci_application.registration_flow_app.id
-  name           = "DaVinci API Registration Sample Policy"
+  name           = "DaVinci Registration Sample Policy"
   status         = "enabled"
   policy_flow {
     flow_id    = davinci_flow.registration_flow.id
@@ -90,11 +89,12 @@ resource "docker_image" "registration" {
 
 # Define a Docker container resource
 resource "docker_container" "registration" {
-  name  = "simple-registration"
-  image = docker_image.registration.image_id
+  name         = "simple-registration"
+  image        = docker_image.registration.image_id
+  network_mode = "bridge"
   ports {
-    internal = 443
-    external = 1443
+    internal = 8443
+    external = 8443
   }
   ports {
     internal = 8080
