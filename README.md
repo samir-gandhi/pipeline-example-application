@@ -35,6 +35,23 @@ To be successful in recreating the use cases supported by this pipeline, there a
 <!-- TODO - Review Required Permissions-->
 > Note - For PingOne, meeting these requirements means you should have credentials for a worker app residing in the "Administrators" environment that has organization-level scoped roles. For DaVinci, you should have credentials for a user in a non-"Administrators" environment that is part of a group specifically intended to be used by command-line tools or APIs with environment-level scoped roles.
 
+### Development Environment
+
+If you have not created a static development environment in your PingOne account, you can do so in the local copy of the *pipeline-example-platform* repository by running the following commands to instantiate one matching prod and qa:
+
+```bash
+git checkout prod
+git pull origin prod
+git checkout -b dev
+git push origin dev
+```
+
+Capture the environment ID for the development environment for use later.
+
+> Note - In many cases, the platform team will provide each developer with a unique development environment. For purposes of this guide, we will assume that the development environment is shared and will be used by multiple developers.
+
+![PingOne Environments](./img/pingOneEnvs.png "PingOne Environments")
+
 ### Repository Setup
 
 Click the **Use this template** button at the top right of this page to create your own repository.  After the repository is created, clone it to your local machine to continue.  The rest of this guide will assume you are working from the root of the cloned repository.
@@ -55,22 +72,25 @@ There are a few items to configure before you can successfully use this reposito
 
 > Note - The configurations in this sample repository rely on environments created from [pipeline-example-platform](https://github.com/pingidentity/pipeline-example-platform). For the `PINGONE_TARGET_ENVIRONMENT_ID_PROD` and `PINGONE_TARGET_ENVIRONMENT_ID_QA` variables needed down below, get the Environment ID for the `prod` and `qa` environments. The Environment ID can be found from the output at the end of a terraform apply (whether from the Github Actions pipeline, or local) or directly from the PingOne console.
 
-#### Development Environment
+### Github CLI
 
-If you have not created a static development environment in your PingOne account, you can do so in the local copy of the *pipeline-example-platform* repository by running the following commands to instantiate one matching prod and qa:
+The Github cli: `gh` will need to be configured for your repository. Run the command **gh auth login** and follow the prompts.  You will need an access token for your Github account and the repository created from this template:
 
 ```bash
-git checkout prod
-git pull origin prod
-git checkout -b dev
-git push origin dev
+gh auth login
+
+? What account do you want to log into? GitHub.com
+? You're already logged into github.com. Do you want to re-authenticate? Yes
+? What is your preferred protocol for Git operations? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+? How would you like to authenticate GitHub CLI? Paste an authentication token
+Tip: you can generate a Personal Access Token here https://github.com/settings/tokens
+The minimum required scopes are 'repo', 'read:org', 'workflow'.
+? Paste your authentication token: ****************************************
+- gh config set -h github.com git_protocol https
+✓ Configured git protocol
+✓ Logged in as <User>
 ```
-
-Capture the environment ID for the development environment for use later.
-
-> Note - In many cases, the platform team will provide each developer with a unique development environment. For purposes of this guide, we will assume that the development environment is shared and will be used by multiple developers.
-
-![PingOne Environments](./img/pingOneEnvs.png "PingOne Environments")
 
 ### Github Actions Secrets
 
@@ -82,7 +102,7 @@ cp secretstemplate localsecrets
 
 > Note - `secretstemplate` is a template file while `localsecrets` contains credentials. `localsecrets` is part of *.gitignore* and should never be committed into the repository. **`secretstemplate`** is committed to the repository, so ensure that you do not edit it directly or you risk exposing your secrets.
 
-Fill in `localsecrets` accordingly, referring to the comments in the file for guidance. Many of the values needed for this file can be found in the localsecrets file from the *pipeline-example-platform* repository.
+Fill in `localsecrets` accordingly, referring to the comments in the file for guidance. Many of the values needed for this file can be found in the localsecrets file from the platform repository.
 
 After updating the file, run the following command to upload **localsecrets** to Github:
 
@@ -100,28 +120,36 @@ Now that the repository and pipeline are configured, the typical git flow can be
 
 A notable difference in this repository from the platform example is that the pipeline does NOT deploy to feature environments. Feature or development environment configuration deployment only takes place from the local machine. When considering the development process, unlike QA and Prod, the development environment ID is not stored in the repository as an environment variable and is not found in the `secretstemplate` file. When the `./scripts/local_feature_deploy.sh` script runs, you will be prompted for the environment ID.  The reasoning behind this flow is the consideration that there might be multiple development environments provided to application developers with no way of distinguishing them in the pipeline, or the possibility that developers would change the variable and impact another engineer.  Therefore, the developer must provide the environment ID for development and initial testing, but the pipeline will handle getting changes to QA and Prod, as those are common across teams and can be defined universally.
 
-To experience the developer's perspective, a walkthrough of the steps follows. The demonstration will simulate the use case of modifying a Davinci flow and promoting the change. To simplify the demonstration, a pre-configured flow will be created using Terraform as a starting point.  It will also be built into a Docker image and launched on your local machine. After you have deployed the flow, you will be able to make the changes necessary in the PingOne UI, export the configuration, and promote the change to the qa and production environments.
+To experience the developer's perspective, a walkthrough follows. The demonstration will simulate the use case of modifying a Davinci flow and promoting the change. To simplify the demonstration, a starting pre-configured flow will be created using Terraform.  The UI components will be built into a Docker image and launched on your local machine. After you have deployed the flow, you will be able to make the changes necessary in the PingOne UI, export the configuration, and promote the change to the qa and production environments.
 
 ### Feature Development Walkthrough
 
-1. Deploy the sample Davinci flow to the development environment by running the following commands. You will be prompted for the environment ID:
+1. To align with a typical developer experience, use the **Feature request** template in Github to create a GitHub Issue in the UI. GitHub Issue templates help ensure the requestor provides appropriate information on the issue. Provide a description and save the issue by clicking the "Submit New Issue" button.
+
+![Create a new issue](./img/githubissuerequest.png "Create a new issue")
+
+2. Select the issue and click "Create a branch" and choose "Checkout Locally" from the right-hand navigation menu.  This action will cause GitHub to create a development branch on your behalf.
+
+![Create a branch](./img/createabranch.png "Create a branch")
+
+3. Deploy the sample Davinci flow to the development environment by running the following commands. You will be prompted for the environment ID:
 
 ```bash
 source localsecrets
 ./scripts/local_feature_deploy.sh
 ```
 
-> Note - If you want to see what Terraform will do without actually deploying, add the `-g` or `--generate` flag to the command. This flag will generate the Terraform configuration without applying it.
+> Note - If you want to see what Terraform will do without actually deploying, add the `-g` or `--generate` flag to the command. This flag generates the Terraform configuration without applying it.
 
-2. Confirm the deployment by examining the Davinci flow in the PingOne console the development environment matching the ID you provided. Click on the Davinci link from the PingOne console to view the flow, and select **Flows** from the left navigation panel. Click on the **PingOne DaVinci Registration Example** flow to view the configuration.
+4. Confirm the deployment by examining the Davinci flow in the PingOne console the development environment matching the ID you provided. Click on the Davinci link from the PingOne console to view the flow, and select **Flows** from the left navigation panel. Click on the **PingOne DaVinci Registration Example** flow to view the configuration.
 
-3. Try out the flow navigating to [https://127.0.0.1:8080](https://127.0.0.1:8080) to access the container launched from the image built by the script. You will be presented a simple form to enter an email address. Since the address is not registered, you will be prompted to register the user.
+5. Try out the flow navigating to [https://127.0.0.1:8080](https://127.0.0.1:8080) to access the container launched from the image built by the script. You will be presented a simple form to enter an email address. Since the address is not registered, you will be prompted to register the user.
 
-4. On the next panel, you are told to provide the email and password. There are password rules in place, but you are not informed when prompted. Try using a simple password such as `password`. The form does not indicate there is a problem, but refuses to accept the password and continue.  The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.  
+6. On the next panel, you are told to provide the email and password. There are password rules in place, but you are not informed when prompted. Try using a simple password such as `password`. The form does not indicate there is a problem, but refuses to accept the password and continue.  The password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.  
 
-5. Create a valid password. After registering the user, you will be redirected to login.
+7. Create a valid password. After registering the user, you will be redirected to login.
 
-6. To improve the flow, you will add a small prompt on the registration page to indicate that the password must meet the requirements.  To do so, select the **Registration Window** node in the Davinci flow editor. Replace the text in the HTML Template editor with the following.  The only change from what is provided is the addition of the password requirements notification and some descriptive comments.
+8. To improve the flow, you will add a small prompt on the registration page to indicate that the password must meet the requirements.  To do so, select the **Registration Window** node in the Davinci flow editor. Replace the text in the HTML Template editor with the following.  The only change from what is provided is the addition of the password requirements notification and some descriptive comments.
 
 ```html
 <form id="registerForm">
@@ -143,15 +171,15 @@ source localsecrets
 </form>
 ```
 
-7. Click **Apply** to save the changes, then click **Deploy** to update the flow in the development environment.
+9. Click **Apply** to save the changes, then click **Deploy** to update the flow in the development environment.
 
-8. Try the flow again, and provide a new email address.  Notice on the registration page that you are presented the password requirements message.  There is no need to register the new user, but you can see the change has been applied.
+10. Try the flow again, and provide a new email address.  Notice on the registration page that you are presented the password requirements message.  There is no need to register the new user, but you can see the change has been applied.
 
-9. To capture the changes for inclusion in your code, export the flow. You can do so by selecting the three dots at the top right of the editor and clicking **Download Flow JSON**. Ensure to select **Include Variable Values** when you export.
+11. To capture the changes for inclusion in your code, export the flow. You can do so by selecting the three dots at the top right of the editor and clicking **Download Flow JSON**. Ensure to select **Include Variable Values** when you export.
 
 ![Export Menu](./img/pingOneEnvs.png "Export Menu")
 
-10. After the application creation is "tested" manually, the new configuration must be added to the Terraform configuration. This addition will happen in a few steps:
+12. After the application creation is "tested" manually, the new configuration must be added to the Terraform configuration. This addition will happen in a few steps:
 
   a. Copy the contents of the downloaded JSON file and use them to replace the `terraform/davinci-flows/davinci-widget-reg-authn-flow.json` file contents. If you examine the changes, you will see that it involves the company ID, metadata about the file and the changes you made to the node in the flow.
 
@@ -198,15 +226,15 @@ needed.
 Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 ```
 
-11. If you want to go one step further, you can modify the HTML code that is placed in the nginx image. To do so, you can modify  `./terraform/sample-app/index.html` in some manner.  When the script is ran again, it will detect the change to the file, rebuild the image, and launch a new container for the UI.
+13. If you want to go one step further, you can modify the HTML code that is placed in the nginx image. To do so, you can modify  `./terraform/sample-app/index.html` in some manner.  When the script is ran again, it will detect the change to the file, rebuild the image, and launch a new container for the UI.
 
-12. Before committing and pushing the changes, run a devcheck against the code to ensure the formatting and syntax are correct, ignoring any warnings or informational messages:
+14. Before committing and pushing the changes, run a devcheck against the code to ensure the formatting and syntax are correct, ignoring any warnings or informational messages:
 
 ```bash
 make devcheck
 ```
 
-13. Commit and push the changes to the repository:
+15. Commit and push the changes to the repository:
 
 ```bash
 git add .
@@ -214,11 +242,11 @@ git commit -m "Adding password requirements to registration page"
 git push
 ```
 
-14. The push will fire a pipeline that runs the same checks as you did locally. As it is a local development branch, no deployment will occur. 
+16. The push will fire a pipeline that runs the same checks as you did locally. As it is a local development branch, no deployment will occur. 
 
-15. Create a pull request in the repository from your branch to `qa`.  The pipeline will run and validate the changes, then deploy the flow to the **qa** environment in your PingOne account.  You can confirm the flow exists and has your change.
+17. Create a pull request in the repository from your branch to `qa`.  The pipeline will run and validate the changes, then deploy the flow to the **qa** environment in your PingOne account.  You can confirm the flow exists and has your change.
 
-16. Finally, you can create a pull request from `qa` to `prod`.  The pipeline will run and validate the changes, then deploy the flow to the **prod** environment in your PingOne account. 
+18. Finally, you can create a pull request from `qa` to `prod`.  The pipeline will run and validate the changes, then deploy the flow to the **prod** environment in your PingOne account. 
 
 ## Conclusion
 
